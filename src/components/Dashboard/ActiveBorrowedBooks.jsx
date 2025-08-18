@@ -17,7 +17,7 @@ const ActiveBorrowedBooks = () => {
       borrowDate: "02-Aug-2025",
       dueDate: "02-Aug-2025",
     },
-     {
+    {
       id: 2,
       borrower: "Emily Clark",
       book: "Deep Work",
