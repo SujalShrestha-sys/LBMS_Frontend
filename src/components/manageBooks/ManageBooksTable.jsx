@@ -10,32 +10,35 @@ const ManageBooksTable = ({
 }) => {
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 5;
 
+  // Apply search + filter
   useEffect(() => {
     let results = books;
 
-    // Filter by search
-    if (searchQuery) {
+    if (filter !== "All") {
+      results = results.filter(
+        (book) => book.category.toLowerCase() === filter.toLowerCase()
+      );
+    }
+
+    if (searchQuery.trim()) {
       results = results.filter(
         (book) =>
           book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (book.category || "")
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
           book.publisher.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Filter by category
-    if (filter !== "All") {
-      results = results.filter((book) => book.category === filter);
-    }
-
     setFilteredBooks(results);
-    setCurrentPage(1); // reset to first page on new filter
+    setCurrentPage(1); // reset to first page when filters change
   }, [searchQuery, filter, books]);
 
-  const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredBooks.length / itemsPerPage) || 1;
   const paginatedBooks = filteredBooks.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -47,9 +50,10 @@ const ManageBooksTable = ({
         <thead>
           <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 text-gray-700 text-sm tracking-wider">
             <th className="px-6 py-4 font-semibold">Title</th>
+            <th className="px-6 py-4 font-semibold">ISBN</th>
             <th className="px-6 py-4 font-semibold">Author</th>
-            <th className="px-6 py-4 font-semibold">Category</th>
             <th className="px-6 py-4 font-semibold">Publisher</th>
+            <th className="px-6 py-4 font-semibold">Category</th>
             <th className="px-6 py-4 text-center font-semibold">Available</th>
             <th className="px-6 py-4 text-center font-semibold">Actions</th>
           </tr>
@@ -65,9 +69,10 @@ const ManageBooksTable = ({
               <td className="px-6 py-4 font-medium text-gray-800">
                 {book.title}
               </td>
+              <td className="px-6 py-4">{book.isbn}</td>
               <td className="px-6 py-4">{book.author}</td>
-              <td className="px-6 py-4">{book.category}</td>
               <td className="px-6 py-4">{book.publisher}</td>
+              <td className="px-6 py-4">{book.category}</td>
               <td className="px-6 py-4 text-center font-semibold text-blue-600">
                 {book.available}
               </td>
@@ -79,15 +84,15 @@ const ManageBooksTable = ({
                   <Eye size={18} />
                 </button>
                 <button
-                  aria-label={`Edit ${book.title}`}
                   onClick={() => onEditBook(book)}
+                  aria-label={`Edit ${book.title}`}
                   className="p-2 rounded-full bg-green-50 text-green-600 hover:bg-green-100 hover:scale-105 transition"
                 >
                   <Pencil size={18} />
                 </button>
                 <button
-                  aria-label={`Delete ${book.title}`}
                   onClick={() => onDeleteBook(book)}
+                  aria-label={`Delete ${book.title}`}
                   className="p-2 rounded-full bg-red-50 text-red-600 hover:bg-red-100 hover:scale-105 transition"
                 >
                   <Trash2 size={18} />
@@ -95,9 +100,10 @@ const ManageBooksTable = ({
               </td>
             </tr>
           ))}
+
           {filteredBooks.length === 0 && (
             <tr>
-              <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+              <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
                 No matching books found.
               </td>
             </tr>
@@ -106,27 +112,29 @@ const ManageBooksTable = ({
       </table>
 
       {/* Pagination Controls */}
-      <div className="flex justify-between items-center px-6 py-2 bg-gray-50 rounded-b-2xl">
-        <p className="text-sm text-gray-500">
-          Page {currentPage} of {totalPages || 1}
-        </p>
-        <div className="flex gap-2">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((p) => p - 1)}
-            className="px-4 py-1.5 text-sm rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
-          >
-            Prev
-          </button>
-          <button
-            disabled={currentPage === totalPages || totalPages === 0}
-            onClick={() => setCurrentPage((p) => p + 1)}
-            className="px-4 py-1.5 text-sm rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
-          >
-            Next
-          </button>
+      {filteredBooks.length > 0 && (
+        <div className="flex justify-between items-center px-6 py-2 bg-gray-50 rounded-b-2xl">
+          <p className="text-sm text-gray-500">
+            Page {currentPage} of {totalPages}
+          </p>
+          <div className="flex gap-2">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => p - 1)}
+              className="px-4 py-1.5 text-sm rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            >
+              Prev
+            </button>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => p + 1)}
+              className="px-4 py-1.5 text-sm rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            >
+              Next
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

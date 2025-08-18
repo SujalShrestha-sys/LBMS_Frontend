@@ -10,64 +10,80 @@ import DeleteBook from "../../components/manageBooks/DeleteBook";
 const ManageBooks = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("All");
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [isEditing, setEditing] = useState(false);
-  const [currentBook, setCurrentBook] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // ✅ Books state is here now
+  // Centralized books state
   const [books, setBooks] = useState([
     {
       id: 1,
       title: "The Data Science Handbook",
       author: "John Smith",
+      isbn: "111-222-333",
       category: "Technology",
       publisher: "Web Publishers",
-      isbn: "111-222-333",
       available: 8,
+      description: "Intro to Data Science.",
     },
     {
       id: 2,
-      title: "Modern Web Development",
-      author: "Jane Doe",
-      category: "Business",
-      publisher: "React Process",
+      title: "Learning JavaScript",
+      author: "Alice Brown",
       isbn: "222-333-444",
+      category: "Programming",
+      publisher: "Tech Books",
       available: 5,
-    },
-    {
-      id: 3,
-      title: "Machine Learning Basics",
-      author: "John Smith",
-      category: "Horror",
-      publisher: "AI Books",
-      isbn: "333-444-555",
-      available: 2,
+      description: "JS basics.",
     },
   ]);
 
+  // Modal states
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [isEditing, setEditing] = useState(false);
+  const [currentBook, setCurrentBook] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // Add new book
   const handleAddBookClick = () => {
     setCurrentBook(null);
     setEditing(false);
     setShowAddModal(true);
   };
 
+  // Edit existing book
   const handleEditBookClick = (book) => {
     setCurrentBook(book);
     setEditing(true);
     setShowAddModal(true);
   };
 
+  // Delete book confirmation
   const handleDeleteBookClick = (book) => {
     setCurrentBook(book);
     setShowDeleteModal(true);
   };
 
-  // ✅ Confirm delete actually updates state
+  // Confirm delete
   const handleConfirmDelete = () => {
-    setBooks((prev) => prev.filter((b) => b.id !== currentBook?.id));
+    setBooks((prev) => prev.filter((b) => b.id !== currentBook.id));
     setShowDeleteModal(false);
     setCurrentBook(null);
+  };
+
+  // Save book (add or edit)
+  const handleSaveBook = (bookData, editing) => {
+    if (editing) {
+      // Update book
+      setBooks((prev) =>
+        prev.map((b) => (b.id === currentBook.id ? { ...b, ...bookData } : b))
+      );
+    } else {
+      // Add new book
+      const newBook = {
+        ...bookData,
+        id: Date.now(), // quick unique ID
+        available: bookData.quantity,
+      };
+      setBooks((prev) => [...prev, newBook]);
+    }
   };
 
   return (
@@ -77,6 +93,7 @@ const ManageBooks = () => {
         <div className="flex-1 flex flex-col">
           <Navbar />
           <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
+            {/* Header */}
             <section className="flex justify-between items-center mb-5">
               <div>
                 <h2 className="text-2xl font-bold mb-2 text-gray-800">
@@ -107,7 +124,7 @@ const ManageBooks = () => {
               />
               <StatsCard
                 title="Available Copies"
-                value={books.reduce((acc, b) => acc + b.available, 0)}
+                value={books.reduce((sum, b) => sum + Number(b.available), 0)}
                 subtitle="Currently in stock"
                 icon={Copy}
                 color="bg-green-100"
@@ -121,7 +138,7 @@ const ManageBooks = () => {
               />
             </div>
 
-            {/* Table Section */}
+            {/* Books List */}
             <section className="rounded-lg p-2">
               <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
                 <div className="flex flex-row items-start flex-start gap-3">
@@ -164,7 +181,7 @@ const ManageBooks = () => {
               </div>
 
               <ManageBooksTable
-                books={books} // ✅ pass books down
+                books={books}
                 searchQuery={searchQuery}
                 filter={filter}
                 onEditBook={handleEditBookClick}
@@ -175,15 +192,16 @@ const ManageBooks = () => {
         </div>
       </div>
 
-      {/* Edit Book Modal */}
+      {/* Add/Edit Book Modal */}
       <EditBook
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         book={currentBook}
         isEditing={isEditing}
+        onSave={handleSaveBook}
       />
 
-      {/* Delete Book Modal */}
+      {/* Delete Confirmation */}
       <DeleteBook
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}

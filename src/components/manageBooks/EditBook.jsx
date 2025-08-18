@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const EditBook = ({ isOpen, onClose, book, isEditing }) => {
+const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -47,18 +47,19 @@ const EditBook = ({ isOpen, onClose, book, isEditing }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isEditing) {
-      console.log("Updating book:", formData);
-    } else {
-      console.log("Adding new book:", formData);
-    }
+    const bookData = {
+      ...formData,
+      available: formData.quantity, // map to "available" used in table
+      id: isEditing ? book.id : Date.now(), // generate id if adding
+    };
 
+    onSave(bookData, isEditing);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[450px] h-[750px] overflow-y-auto">
+    <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-[450px] h-[710px] overflow-y-auto">
         {/* Header */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-800">
@@ -87,27 +88,33 @@ const EditBook = ({ isOpen, onClose, book, isEditing }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">Author*</label>
-            <input
-              type="text"
-              name="author"
-              value={formData.author}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">ISBN*</label>
-            <input
-              type="text"
-              name="isbn"
-              value={formData.isbn}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
+
+          <div className="flex flex-row gap-4">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Author*
+              </label>
+              <input
+                type="text"
+                name="author"
+                value={formData.author}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">ISBN*</label>
+              <input
+                type="text"
+                name="isbn"
+                value={formData.isbn}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
           </div>
 
           {/* Section: Publication Details */}
@@ -127,37 +134,40 @@ const EditBook = ({ isOpen, onClose, book, isEditing }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">
-              Books quantity*
-            </label>
-            <input
-              type="number"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">
-              Categories*
-            </label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            >
-              <option value="">Select categories</option>
-              <option value="Technology">Technology</option>
-              <option value="Business">Business</option>
-              <option value="Programming">Programming</option>
-              <option value="Horror">Horror</option>
-              <option value="Design">Design</option>
-            </select>
+
+          <div className="flex flex-row gap-4">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Books quantity*
+              </label>
+              <input
+                type="number"
+                name="quantity"
+                value={formData.quantity}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Categories*
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                <option value="">Select categories</option>
+                <option value="Technology">Technology</option>
+                <option value="Business">Business</option>
+                <option value="Programming">Programming</option>
+                <option value="Horror">Horror</option>
+                <option value="Design">Design</option>
+              </select>
+            </div>
           </div>
           <div>
             <label className="block text-sm text-gray-600 mb-1">

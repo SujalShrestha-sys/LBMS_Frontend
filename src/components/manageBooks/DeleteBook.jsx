@@ -5,8 +5,8 @@ const DeleteBook = ({ isOpen, onClose, onConfirm, book }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[400px]">
+    <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-xs flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-[500px]">
         {/* Header */}
         <h2 className="text-lg font-semibold text-gray-800 mb-3">
           Delete Book
