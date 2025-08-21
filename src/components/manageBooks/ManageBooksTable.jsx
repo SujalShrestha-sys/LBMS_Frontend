@@ -18,7 +18,7 @@ const ManageBooksTable = ({
 
     if (filter !== "All") {
       results = results.filter(
-        (book) => book.category.toLowerCase() === filter.toLowerCase()
+        (book) => book.genre?.toLowerCase() === filter.toLowerCase()
       );
     }
 
@@ -27,7 +27,7 @@ const ManageBooksTable = ({
         (book) =>
           book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (book.category || "")
+          (book.genre || "")
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
           book.publisher.toLowerCase().includes(searchQuery.toLowerCase())
@@ -53,7 +53,7 @@ const ManageBooksTable = ({
             <th className="px-6 py-4 font-semibold">ISBN</th>
             <th className="px-6 py-4 font-semibold">Author</th>
             <th className="px-6 py-4 font-semibold">Publisher</th>
-            <th className="px-6 py-4 font-semibold">Category</th>
+            <th className="px-6 py-4 font-semibold">Genre</th>
             <th className="px-6 py-4 text-center font-semibold">Available</th>
             <th className="px-6 py-4 text-center font-semibold">Actions</th>
           </tr>
@@ -61,7 +61,7 @@ const ManageBooksTable = ({
         <tbody className="divide-y divide-gray-100">
           {paginatedBooks.map((book, idx) => (
             <tr
-              key={book.id}
+              key={book._id}
               className={`hover:shadow-md transition duration-200 ${
                 idx % 2 === 0 ? "bg-white" : "bg-gray-50"
               }`}
@@ -72,7 +72,7 @@ const ManageBooksTable = ({
               <td className="px-6 py-4">{book.isbn}</td>
               <td className="px-6 py-4">{book.author}</td>
               <td className="px-6 py-4">{book.publisher}</td>
-              <td className="px-6 py-4">{book.category}</td>
+              <td className="px-6 py-4">{book.genre}</td>
               <td className="px-6 py-4 text-center font-semibold text-blue-600">
                 {book.available}
               </td>
