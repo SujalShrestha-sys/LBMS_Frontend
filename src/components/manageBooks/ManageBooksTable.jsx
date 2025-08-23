@@ -10,11 +10,11 @@ const ManageBooksTable = ({
 }) => {
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
 
   // Apply search + filter
   useEffect(() => {
-    let results = books;
+    let results = books ? books.filter((book) => book != null) : [];
 
     if (filter !== "All") {
       results = results.filter(
@@ -25,12 +25,12 @@ const ManageBooksTable = ({
     if (searchQuery.trim()) {
       results = results.filter(
         (book) =>
-          book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book.author?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           (book.genre || "")
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          book.publisher.toLowerCase().includes(searchQuery.toLowerCase())
+          book.publisher?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -59,47 +59,49 @@ const ManageBooksTable = ({
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {paginatedBooks.map((book, idx) => (
-            <tr
-              key={book._id}
-              className={`hover:shadow-md transition duration-200 ${
-                idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-              }`}
-            >
-              <td className="px-6 py-4 font-medium text-gray-800">
-                {book.title}
-              </td>
-              <td className="px-6 py-4">{book.isbn}</td>
-              <td className="px-6 py-4">{book.author}</td>
-              <td className="px-6 py-4">{book.publisher}</td>
-              <td className="px-6 py-4">{book.genre}</td>
-              <td className="px-6 py-4 text-center font-semibold text-blue-600">
-                {book.available}
-              </td>
-              <td className="px-6 py-4 text-center flex justify-center gap-3">
-                <button
-                  aria-label={`View ${book.title}`}
-                  className="p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 hover:scale-105 transition"
-                >
-                  <Eye size={18} />
-                </button>
-                <button
-                  onClick={() => onEditBook(book)}
-                  aria-label={`Edit ${book.title}`}
-                  className="p-2 rounded-full bg-green-50 text-green-600 hover:bg-green-100 hover:scale-105 transition"
-                >
-                  <Pencil size={18} />
-                </button>
-                <button
-                  onClick={() => onDeleteBook(book)}
-                  aria-label={`Delete ${book.title}`}
-                  className="p-2 rounded-full bg-red-50 text-red-600 hover:bg-red-100 hover:scale-105 transition"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </td>
-            </tr>
-          ))}
+          {paginatedBooks
+            .filter((book) => book)
+            .map((book, idx) => (
+              <tr
+                key={book._id}
+                className={`hover:shadow-md transition duration-200 ${
+                  idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                }`}
+              >
+                <td className="px-6 py-4 font-medium text-gray-800">
+                  {book.title}
+                </td>
+                <td className="px-6 py-4">{book.isbn}</td>
+                <td className="px-6 py-4">{book.author}</td>
+                <td className="px-6 py-4">{book.publisher}</td>
+                <td className="px-6 py-4">{book.genre}</td>
+                <td className="px-6 py-4 text-center font-semibold text-blue-600">
+                  {book.available} / {book.quantity}
+                </td>
+                <td className="px-6 py-4 text-center flex justify-center gap-3">
+                  <button
+                    aria-label={`View ${book.title}`}
+                    className="p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 hover:scale-105 transition"
+                  >
+                    <Eye size={18} />
+                  </button>
+                  <button
+                    onClick={() => onEditBook(book)}
+                    aria-label={`Edit ${book.title}`}
+                    className="p-2 rounded-full bg-green-50 text-green-600 hover:bg-green-100 hover:scale-105 transition"
+                  >
+                    <Pencil size={18} />
+                  </button>
+                  <button
+                    onClick={() => onDeleteBook(book)}
+                    aria-label={`Delete ${book.title}`}
+                    className="p-2 rounded-full bg-red-50 text-red-600 hover:bg-red-100 hover:scale-105 transition"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
 
           {filteredBooks.length === 0 && (
             <tr>

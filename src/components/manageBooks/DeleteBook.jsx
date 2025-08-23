@@ -1,16 +1,20 @@
-// components/manageBooks/DeleteBook.jsx
 import React from "react";
 
 const DeleteBook = ({ isOpen, onClose, onConfirm, book }) => {
   if (!isOpen) return null;
 
+  const handleConfirm = () => {
+    onConfirm();
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-xs flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[500px]">
-        {/* Header */}
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">
+    <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-xs flex justify-center items-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">
           Delete Book
         </h2>
+
         <p className="text-sm text-gray-600 mb-6">
           Are you sure you want to delete{" "}
           <span className="font-semibold text-red-600">
@@ -19,7 +23,6 @@ const DeleteBook = ({ isOpen, onClose, onConfirm, book }) => {
           ? This action cannot be undone.
         </p>
 
-        {/* Buttons */}
         <div className="flex justify-end gap-3">
           <button
             onClick={onClose}
@@ -27,14 +30,12 @@ const DeleteBook = ({ isOpen, onClose, onConfirm, book }) => {
           >
             Cancel
           </button>
+
           <button
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
+            onClick={handleConfirm}
             className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
           >
-            Yes, Delete
+            Delete
           </button>
         </div>
       </div>

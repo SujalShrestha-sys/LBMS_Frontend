@@ -7,8 +7,9 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     isbn: "",
     publisher: "",
     quantity: "",
-    category: "",
+    genre: "",
     description: "",
+    publishedYear: "",
   });
 
   // Prefill form when editing
@@ -19,27 +20,26 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         author: book.author || "",
         isbn: book.isbn || "",
         publisher: book.publisher || "",
-        quantity: book.available || "",
-        category: book.category || "",
+        quantity: book.quantity || "",
+        genre: book.genre || "",
         description: book.description || "",
+        publishedYear: book.publishedYear || "",
       });
     } else {
-      // Reset for adding new book
       setFormData({
         title: "",
         author: "",
         isbn: "",
         publisher: "",
         quantity: "",
-        category: "",
+        genre: "",
         description: "",
+        publishedYear: "",
       });
     }
   }, [isEditing, book, isOpen]);
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,50 +51,50 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
 
     const bookData = {
       ...formData,
-      available: formData.quantity, // map to "available" used in table
-      id: isEditing ? book.id : Date.now(), // generate id if adding
+      quantity: Number(formData.quantity),
+      available: isEditing ? book.available : Number(formData.quantity),
     };
 
     onSave(bookData, isEditing);
-    onClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[450px] h-[710px] overflow-y-auto">
+    <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
         {/* Header */}
-        <div className="mb-6">
+        <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-800">
             {isEditing ? "Edit Book" : "Add New Book"}
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600 mt-1">
             {isEditing
-              ? "Update the book details below."
-              : "Fill in the details to add a new book."}
+              ? "Update book details"
+              : "Add a new book to your library"}
           </p>
         </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Section: Basic Info */}
-          <h3 className="text-sm font-semibold text-gray-700">
-            Basic Information
-          </h3>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Title */}
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Title*</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Title *
+            </label>
             <input
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
-          <div className="flex flex-row gap-4">
+          {/* Author & ISBN */}
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Author*
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Author *
               </label>
               <input
                 type="text"
@@ -102,30 +102,28 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
                 value={formData.author}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-
             <div>
-              <label className="block text-sm text-gray-600 mb-1">ISBN*</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                ISBN *
+              </label>
               <input
                 type="text"
                 name="isbn"
                 value={formData.isbn}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
 
-          {/* Section: Publication Details */}
-          <h3 className="text-sm font-semibold text-gray-700 mt-4">
-            Publication Details
-          </h3>
+          {/* Publisher */}
           <div>
-            <label className="block text-sm text-gray-600 mb-1">
-              Publisher*
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Publisher *
             </label>
             <input
               type="text"
@@ -133,14 +131,15 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
               value={formData.publisher}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
-          <div className="flex flex-row gap-4">
+          {/* Quantity & Genre */}
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Books quantity*
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Quantity *
               </label>
               <input
                 type="number"
@@ -148,55 +147,74 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
                 value={formData.quantity}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                min="1"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Categories*
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Genre *
               </label>
               <select
-                name="category"
-                value={formData.category}
+                name="genre"
+                value={formData.genre}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Select categories</option>
+                <option value="">Select Genre</option>
                 <option value="Technology">Technology</option>
                 <option value="Business">Business</option>
                 <option value="Programming">Programming</option>
                 <option value="Horror">Horror</option>
                 <option value="Design">Design</option>
+                <option value="Financial">Financial</option>
+                <option value="Lifestyle & Habits">Lifestyle & Habits</option>
               </select>
             </div>
           </div>
+
+          {/* Published Year */}
           <div>
-            <label className="block text-sm text-gray-600 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Published Year
+            </label>
+            <input
+              type="number"
+              name="publishedYear"
+              value={formData.publishedYear}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Description
             </label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="Description (Optional)"
               rows="3"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-            ></textarea>
+              placeholder="Optional description"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            />
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 mt-6">
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 transition"
+              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
             >
               {isEditing ? "Update Book" : "Add Book"}
             </button>

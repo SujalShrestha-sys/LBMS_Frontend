@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, Phone, Lock, Eye, EyeOff, BookOpen } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, BookOpen, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { signupApi } from "../../services/authServices";
 
@@ -20,11 +20,9 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sign Up Data:", formData);
 
     try {
       const res = await signupApi(formData);
-      console.log("signup response: ", res.data);
 
       if (res.data.success) {
         alert("Signup successful! Please login to continue.");
@@ -33,21 +31,20 @@ const SignUpForm = () => {
         alert("Signup failed: Please try again.");
       }
     } catch (error) {
-      console.error("Signup error: ", error);
       alert(error.response?.data?.message || "Signup failed");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
-        {/* Logo + Heading */}
-        <div className="flex flex-col justify-center items-center mb-6">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <BookOpen color="green" />
-            <h1 className="text-xl font-bold ">BookHive</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <BookOpen className="text-blue-600" size={24} />
+            <h1 className="text-2xl font-bold text-gray-800">BookHive</h1>
           </div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          <h2 className="text-lg font-semibold text-gray-800 mb-1">
             Create an account
           </h2>
           <p className="text-gray-500 text-sm">
@@ -59,73 +56,71 @@ const SignUpForm = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
           <div>
-            <label className="text-sm text-black-600 flex items-center gap-2 mb-1">
-              <Mail className="w-4 h-4 text-gray-400" />
-              Name
-            </label>
-            <input
-              type="name"
-              name="name"
-              placeholder="eg: John Doe"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none"
-            />
+            <label className="text-sm text-gray-600 mb-1 block">Name</label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="text"
+                name="name"
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
           </div>
 
           {/* Email */}
           <div>
-            <label className="text-sm text-black-600 flex items-center gap-2 mb-1">
-              <Mail className="w-4 h-4 text-gray-400" />
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="someone@gmail.com"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none"
-            />
+            <label className="text-sm text-gray-600 mb-1 block">Email</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="email"
+                name="email"
+                placeholder="someone@gmail.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
           </div>
 
           {/* Password */}
-          <div className="relative">
-            <label className="text-sm text-black-600 flex items-center gap-2 mb-1">
-              <Lock className="w-4 h-4 text-gray-400" />
-              Password
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="********"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 text-gray-400 hover:text-gray-600"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+          <div>
+            <label className="text-sm text-gray-600 mb-1 block">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="********"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
           {/* Role */}
           <div>
-            <label className="text-sm text-black-600 flex items-center gap-2 mb-1">
-              Role
-            </label>
+            <label className="text-sm text-gray-600 mb-1 block">Role</label>
             <select
               name="role"
               value={formData.role}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
             >
               <option value="">Select a Role</option>
               <option value="librarian">Librarian</option>
@@ -141,9 +136,9 @@ const SignUpForm = () => {
             Sign Up
           </button>
 
-          {/* Already have an account */}
-          <p className="mt-4 text-sm text-center text-gray-600">
-            Already have an Account?{" "}
+          {/* Login Link */}
+          <p className="text-sm text-center text-gray-600">
+            Already have an account?{" "}
             <Link
               to="/login"
               className="text-blue-600 hover:underline font-medium"

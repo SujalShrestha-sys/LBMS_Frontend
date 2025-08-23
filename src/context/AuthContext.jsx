@@ -5,8 +5,14 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")) || null);
-  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const [token, setToken] = useState(
+    () => localStorage.getItem("token") || null
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,9 +40,15 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthenticated = !!token;
 
-  return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, loading, login, logout, updateUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    token,
+    isAuthenticated,
+    loading,
+    login,
+    logout,
+    updateUser,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
