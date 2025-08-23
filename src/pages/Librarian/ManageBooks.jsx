@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../components/layout/Sidebar";
-import Navbar from "../../components/layout/Navbar";
 import StatsCard from "../../components/Dashboard/StatsCard";
 import ManageBooksTable from "../../components/manageBooks/ManageBooksTable";
 import { BookOpen, Copy, Layers, Search, BookOpenText } from "lucide-react";
@@ -24,9 +22,9 @@ const ManageBooks = () => {
     fetchBooks();
   }, []);
 
-  const fetchBooks = async () => {
+  const fetchBooks = () => {
     try {
-      const res = await getAllBooks();
+      const res = getAllBooks();
       setBooks(res.data.allBooks);
     } catch (error) {
       console.error("Failed to fetch books", error);
@@ -62,11 +60,10 @@ const ManageBooks = () => {
   };
 
   // Confirm delete
-  // Delete
-  const handleConfirmDelete = async () => {
+  const handleConfirmDelete = () => {
     try {
       if (currentBook?._id) {
-        await deleteBook(currentBook._id);
+        deleteBook(currentBook._id);
         fetchBooks();
       }
     } catch (err) {
@@ -78,13 +75,13 @@ const ManageBooks = () => {
   };
 
   // Save book (add or edit)
-  const handleSaveBook = async (bookData, editing) => {
+  const handleSaveBook = (bookData, editing) => {
     try {
       if (editing && currentBook?._id) {
-        await updateBook(currentBook._id, bookData);
+        updateBook(currentBook._id, bookData);
         // Update book
       } else {
-        await createBook(bookData);
+        createBook(bookData);
       }
       fetchBooks();
     } catch (error) {
@@ -131,7 +128,10 @@ const ManageBooks = () => {
             />
             <StatsCard
               title="Available Copies"
-              value={books.reduce((sum, b) => sum + Number(b.available || 0), 0)}
+              value={books.reduce(
+                (sum, b) => sum + Number(b.available || 0),
+                0
+              )}
               subtitle="Currently in stock"
               icon={Copy}
               color="bg-green-100"

@@ -1,17 +1,18 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:3005/api/auth", // adjust if backend runs on a different port
+  baseURL: "http://localhost:3005/api/auth",
 });
 
+
 // Signup
-export const signup = (userData) => API.post("/register", userData);
+export const signupApi = (userData) => API.post("/register", userData);
 
 // Login
-export const login = (credentials) => API.post("/login", credentials);
+export const loginApi = (credentials) => API.post("/login", credentials);
 
 //logout
-export const logout = () => {
-  localStorage.removeItem("authToken");
+export const logoutApi = () => {
+  localStorage.removeItem("token");
   localStorage.removeItem("user");
-}
+};

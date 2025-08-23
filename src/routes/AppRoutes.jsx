@@ -6,7 +6,7 @@ import LibrarianLayout from "../components/layout/LibrarianLayout";
 
 // Auth Pages
 import SignUp from "../pages/Librarian/SignUp";
-import Login from "../pages/Login";
+import Login from "../pages/Librarian/Login";
 
 // Librarian Pages
 import Dashboard from "../pages/Librarian/Dashboard";

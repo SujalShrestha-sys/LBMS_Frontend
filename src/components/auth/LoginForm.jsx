@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import { Mail, Lock, BookOpen, EyeOff, Eye } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../../services/authServices";
-import { jwtDecode } from "jwt-decode";
+import { loginApi } from "../../services/authServices";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginForm = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -26,46 +27,12 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = formData;
-    console.log("Login data:", formData);
-
     try {
-      const res = await login({ email, password });
-      console.log("Login response:", res.data); // Log the complete response
-
-      if (res.data.token) {
-        localStorage.setItem("authToken", res.data.token);
-
-        const decoded = jwtDecode(res.data.token);
-        console.log(decoded);
-        const role = decoded.role;
-        const id = decoded.id;
-        console.log("User Role: ", role);
-
-        // Store user information in local storage
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            id,
-            role,
-          })
-        );
-
-        if (role === "librarian") {
-          console.log("Navigating to Dashboard");
-          navigate("/dashboard"); // Librarian dashboard route
-        } else if (role === "borrower") {
-          console.log("Navigating to Borrower Dashboard");
-          navigate("/borrower-dashboard"); // Borrower dashboard route
-        } else {
-          setError("Unknown role");
-          console.log("Unknown role");
-        }
-      } else {
-        setError("login Failed: No token received");
-      }
+      const res = await loginApi(formData);
+      const { token, user } = res.data;
+      login(user, token);
+      navigate("/dashboard");
     } catch (error) {
-      console.error("Login error:", error);
       setError(error.response?.data?.message || "Login failed");
     }
   };

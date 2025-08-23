@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Mail, Phone, Lock, Eye, EyeOff, BookOpen } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { signup } from "../../services/authServices";
-import { jwtDecode } from "jwt-decode";
+import { signupApi } from "../../services/authServices";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -24,7 +23,7 @@ const SignUpForm = () => {
     console.log("Sign Up Data:", formData);
 
     try {
-      const res = await signup(formData);
+      const res = await signupApi(formData);
       console.log("signup response: ", res.data);
 
       if (res.data.success) {
@@ -58,8 +57,7 @@ const SignUpForm = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-
-            {/* Name */}
+          {/* Name */}
           <div>
             <label className="text-sm text-black-600 flex items-center gap-2 mb-1">
               <Mail className="w-4 h-4 text-gray-400" />

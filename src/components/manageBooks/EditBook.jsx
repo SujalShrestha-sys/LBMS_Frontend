@@ -37,7 +37,9 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     }
   }, [isEditing, book, isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

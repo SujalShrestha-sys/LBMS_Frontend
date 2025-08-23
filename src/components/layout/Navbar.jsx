@@ -1,15 +1,16 @@
 import React from "react";
 import { Bell, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../services/authServices";
+import { useAuth } from "../../context/AuthContext";
 
 const Navbar = ({ showSearch }) => {
   const navigate = useNavigate();
 
+  const {logout} = useAuth();
+
   const handleLogout = () => {
     logout();
     navigate("/login");
-    window.location.reload(); // optional (forces re-check of ProtectedRoute)
   };
   return (
     <nav className="flex justify-between items-center px-6 py-4 bg-white shadow h-16">

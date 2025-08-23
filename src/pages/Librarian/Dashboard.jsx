@@ -4,18 +4,18 @@ import StatsCard from "../../components/Dashboard/StatsCard.jsx";
 import PendingRequest from "../../components/Dashboard/PendingRequest.jsx";
 import ActiveBorrowedBooks from "../../components/Dashboard/ActiveBorrowedBooks.jsx";
 import RecentBooks from "../../components/Dashboard/RecentBooks.jsx";
-import { Book, Users, BookOpen, TrendingUp, Clock } from "lucide-react"; // Import icons
-import useAuth from "../../hooks/useAuth.js";
+import { Book, Users, BookOpen, TrendingUp, Clock } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
 
-  if(loading){
-    return <div>Loading...</div>
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  if(!user){
-    return <div>Please log in to access the dashboard</div>
+  if (!user) {
+    return <div>Please log in to access the dashboard</div>;
   }
   return (
     <>
