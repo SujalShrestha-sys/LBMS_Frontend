@@ -11,14 +11,12 @@ const LibrarianProfile = () => {
   const { updateUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
-
   const [profileData, setProfileData] = useState({
     fullName: "",
     phone: "",
     email: "",
     memberSince: "",
   });
-
   const [editFormData, setEditFormData] = useState({
     fullName: "",
     phone: "",
@@ -34,7 +32,7 @@ const LibrarianProfile = () => {
   const fetchProfile = async () => {
     try {
       const res = await getLibrarianProfile();
-      const user = res.user;
+      const user = res.data.user;
 
       if (user) {
         setProfileData({
@@ -81,14 +79,16 @@ const LibrarianProfile = () => {
         newPassword: editFormData.newPassword,
       });
 
+      const updatedUser = res?.data?.user;
+
       setProfileData({
-        fullName: res.user.name,
-        email: res.user.email,
-        phone: res.user.phone || "",
-        memberSince: res.user.createdAt,
+        fullName: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone || "",
+        memberSince: updatedUser.createdAt,
       });
 
-      updateUser(res.user);
+      updateUser(updatedUser);
       setEditFormData((prev) => ({
         ...prev,
         oldPassword: "",
@@ -137,7 +137,7 @@ const LibrarianProfile = () => {
                 className="w-full h-full object-cover rounded-full"
               />
             ) : (
-              <span className="text-2xl text-gray-400">
+              <span className="text-3xl text-gray-400">
                 {profileData.fullName ? profileData.fullName[0] : "U"}
               </span>
             )}
@@ -156,7 +156,7 @@ const LibrarianProfile = () => {
             </label>
           </div>
 
-          <h3 className="text-lg font-semibold text-gray-800">
+          <h3 className="text-xl font-semibold text-gray-800">
             {profileData.fullName}
           </h3>
           <p className="text-gray-600 text-sm mt-1">{profileData.email}</p>
@@ -187,7 +187,7 @@ const LibrarianProfile = () => {
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">
                   Account Information
@@ -199,34 +199,40 @@ const LibrarianProfile = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-gray-600 mb-1 flex items-center">
-                    <User className="w-4 h-4 mr-2" /> Full Name
+                  <label className="text-sm text-gray-600 mb-1 block">
+                    Full Name
                   </label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={editFormData.fullName}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  />
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={editFormData.fullName}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600 mb-1 flex items-center">
-                    <Phone className="w-4 h-4 mr-2" /> Phone Number
+                  <label className="text-sm text-gray-600 mb-1 block">
+                    Phone Number
                   </label>
-                  <input
-                    type="text"
-                    name="phone"
-                    value={editFormData.phone}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  />
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="text"
+                      name="phone"
+                      value={editFormData.phone}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="border rounded-lg p-4 bg-gray-50">
                 <div className="flex items-center gap-2 mb-3">
-                  <Mail className="w-4 h-4" />
+                  <Mail className="w-4 h-4 text-gray-400" />
                   <h4 className="font-semibold text-gray-800">
                     Login Credentials
                   </h4>
@@ -234,47 +240,56 @@ const LibrarianProfile = () => {
 
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm text-gray-600 mb-1">
+                    <label className="text-sm text-gray-600 mb-1 block">
                       Email Address
                     </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={editFormData.email}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <input
+                        type="email"
+                        name="email"
+                        value={editFormData.email}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 mb-1 flex items-center">
-                      <Key className="w-4 h-4 mr-2" /> Old Password
+                    <label className="text-sm text-gray-600 mb-1 block">
+                      Old Password
                     </label>
-                    <input
-                      type="password"
-                      name="oldPassword"
-                      value={editFormData.oldPassword}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
+                    <div className="relative">
+                      <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <input
+                        type="password"
+                        name="oldPassword"
+                        value={editFormData.oldPassword}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 mb-1 flex items-center">
-                      <Key className="w-4 h-4 mr-2" /> New Password (optional)
+                    <label className="text-sm text-gray-600 mb-1 block">
+                      New Password (optional)
                     </label>
-                    <input
-                      type="password"
-                      name="newPassword"
-                      value={editFormData.newPassword}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    />
+                    <div className="relative">
+                      <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <input
+                        type="password"
+                        name="newPassword"
+                        value={editFormData.newPassword}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                className=" w-full bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
               >
                 Save Changes
               </button>
