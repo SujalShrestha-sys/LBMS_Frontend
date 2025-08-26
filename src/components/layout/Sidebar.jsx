@@ -5,11 +5,12 @@ const Sidebar = () => {
   const navItems = [
     { to: "/dashboard", icon: Home, label: "Dashboard" },
     { to: "/manage-books", icon: Book, label: "Manage Books" },
+    { to: "/borrows", icon: User, label: "Borrower Management" },
     { to: "/profile", icon: User, label: "Profile" },
   ];
 
   return (
-    <div className="w-64 bg-white shadow-lg p-4">
+    <div className="w-72 bg-white shadow-lg p-4">
       <h1 className="text-xl font-bold mb-6">BookHive</h1>
 
       <nav className="space-y-1">

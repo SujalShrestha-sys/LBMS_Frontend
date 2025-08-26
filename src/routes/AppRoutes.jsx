@@ -6,6 +6,7 @@ import Dashboard from "../pages/Librarian/Dashboard";
 import ManageBooks from "../pages/Librarian/ManageBooks";
 import Profile from "../pages/Librarian/Profile";
 import ActiveBorrowedBooks from "../components/Dashboard/ActiveBorrowedBooks";
+import BorrowManagement from "../pages/Librarian/BorrowManagement";
 import ProtectedRoute from "./ProtectedRoutes";
 import PublicRoute from "./PublicRoute";
 
@@ -25,6 +26,7 @@ const AppRoutes = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/manage-books" element={<ManageBooks />} />
             <Route path="/borrowed-books" element={<ActiveBorrowedBooks />} />
+            <Route path="/borrows" element={<BorrowManagement />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
         </Route>

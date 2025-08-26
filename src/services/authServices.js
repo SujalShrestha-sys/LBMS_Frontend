@@ -9,4 +9,4 @@ export const loginApi = (credentials) => API.post("/login", credentials);
 export const logoutApi = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
-};
+}; 
