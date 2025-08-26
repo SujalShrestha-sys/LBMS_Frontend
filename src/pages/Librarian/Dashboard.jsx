@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StatsCard from "../../components/Dashboard/StatsCard";
 import PendingRequest from "../../components/Dashboard/PendingRequest";
 import ActiveBorrowedBooks from "../../components/Dashboard/ActiveBorrowedBooks";
 import RecentBooks from "../../components/Dashboard/RecentBooks";
 import { Book, Users, BookOpen, TrendingUp, Clock } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { librarianStats } from "../../services/profileServices";
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
+  const [stats, setStats] = useState(null);
+
+  const fetchStats = async () => {
+    try {
+      const res = await librarianStats();
+      console.log(res);
+      setStats(res.data);
+    } catch (error) {
+      console.error("failed to fetch stats: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
   if (loading) return <div className="text-center py-10">Loading...</div>;
   if (!user)
@@ -17,53 +33,56 @@ const Dashboard = () => {
       </div>
     );
 
-  const statsData = [
-    {
-      title: "Total Books",
-      value: "120",
-      subtitle: "Total books available",
-      icon: Book,
-      color: "bg-blue-200",
-    },
-    {
-      title: "Currently Borrowed",
-      value: "30",
-      subtitle: "Books currently borrowed",
-      icon: BookOpen,
-      color: "bg-green-200",
-    },
-    {
-      title: "Total Borrowers",
-      value: "60",
-      subtitle: "Active borrowers",
-      icon: Users,
-      color: "bg-yellow-200",
-    },
-    {
-      title: "Total Librarians",
-      value: "5",
-      subtitle: "Staff members",
-      icon: TrendingUp,
-      color: "bg-purple-200",
-    },
-    {
-      title: "Total Borrows",
-      value: "200",
-      subtitle: "Total borrows this year",
-      icon: Clock,
-      color: "bg-red-200",
-    },
-    {
-      title: "Total Available Books",
-      value: "90",
-      subtitle: "Books in stock",
-      icon: Book,
-      color: "bg-teal-200",
-    },
-  ];
+  const statsData = stats
+    ? [
+        {
+          title: "Total Books",
+          value: stats.totalBooks,
+          subtitle: "Total books available",
+          icon: Book,
+          color: "bg-blue-200",
+        },
+        {
+          title: "Currently Borrowed",
+          value: stats.currentlyBorrowed,
+          subtitle: "Books currently borrowed",
+          icon: BookOpen,
+          color: "bg-green-200",
+        },
+        {
+          title: "Total Borrowers",
+          value: stats.totalBorrowers,
+          subtitle: "Active borrowers",
+          icon: Users,
+          color: "bg-yellow-200",
+        },
+        {
+          title: "Total Librarians",
+          value: stats.totalLibrarians,
+          subtitle: "Staff members",
+          icon: TrendingUp,
+          color: "bg-purple-200",
+        },
+        {
+          title: "Total Borrows",
+          value: stats.totalBorrowers,
+          subtitle: "Total borrows this year",
+          icon: Clock,
+          color: "bg-red-200",
+        },
+        {
+          title: "Total Available Books",
+          value: stats.totalAvailableBooks,
+          subtitle: "Books in stock",
+          icon: Book,
+          color: "bg-teal-200",
+        },
+      ]
+    : [];
 
   return (
     <div className="space-y-6">
+      {/* Welcome Header */}
       <div>
         <h2 className="text-2xl font-bold text-gray-800">
           Welcome Back <span className="text-blue-600">{user.name}</span>

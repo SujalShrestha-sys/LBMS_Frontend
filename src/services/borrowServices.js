@@ -19,3 +19,10 @@ export const returnBook = (borrowId) => {
 export const sendReminder = (borrowId) => {
     return api.post(`/admin/send-reminder/${borrowId}`)
 }
+
+export const quickBorrowedList = () => {
+    return api.get("/borrowed")
+}
+
+
+

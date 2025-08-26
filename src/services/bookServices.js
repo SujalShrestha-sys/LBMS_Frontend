@@ -21,6 +21,9 @@ export const deleteBook = (id) => {
 }
 
 // Borrower-specific
-export const getNewReleases = () => api.get("/books/new");
-export const getRecommendedBooks = () => api.get("/books/recommended");
-
+export const getNewReleases = () => {
+    return api.get("/books/new");
+}
+export const getRecommendedBooks = () => {
+    return api.get("/books/recommended");
+}

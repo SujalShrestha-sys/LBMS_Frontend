@@ -5,8 +5,8 @@ const PendingRequestsTable = ({ data, actions }) => {
   if (!data || data.length === 0) {
     return (
       <div className="text-center py-16">
-        <ClipboardList className="mx-auto h-16 w-16 text-slate-400 mb-4" />
-        <h3 className="text-lg font-medium text-slate-800 mb-2">
+        <ClipboardList className="mx-auto h-14 w-12 text-slate-400 mb-2" />
+        <h3 className="text-lg font-medium text-slate-700 mb-2">
           No pending requests
         </h3>
         <p className="text-slate-600">All requests have been processed</p>

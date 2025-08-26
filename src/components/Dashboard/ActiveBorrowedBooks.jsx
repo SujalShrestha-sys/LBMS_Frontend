@@ -1,36 +1,34 @@
-import React from "react";
+// components/Dashboard/ActiveBorrowedBooks.jsx
+import React, { useEffect, useState } from "react";
 import { BookOpenCheck } from "lucide-react";
+import api from "../../services/api";
+import { quickBorrowedList } from "../../services/borrowServices";
 
 const ActiveBorrowedBooks = () => {
-  const borrowed = [
-    {
-      id: 1,
-      borrower: "Mike Ross",
-      book: "Atomic Habits",
-      borrowDate: "02-Aug-2025",
-      dueDate: "02-Aug-2025",
-    },
-    {
-      id: 2,
-      borrower: "Emily Clark",
-      book: "Deep Work",
-      borrowDate: "02-Aug-2025",
-      dueDate: "02-Aug-2025",
-    },
-    {
-      id: 3,
-      borrower: "Emily Clark",
-      book: "Deep Work",
-      borrowDate: "02-Aug-2025",
-      dueDate: "02-Aug-2025",
-    },
-  ];
+  const [borrowed, setBorrowed] = useState([]);
+
+  const fetchBorrowed = async () => {
+    try {
+      const res = await quickBorrowedList();
+      console.log("Quick borrowed: ", res);
+      const active = res.data.records.filter(
+        (r) => !r.isReturned && r.status === "Approved"
+      );
+      setBorrowed(active);
+    } catch (err) {
+      console.error("Error fetching borrowed books", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchBorrowed();
+  }, []);
 
   return (
     <div className="w-full">
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100">
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <BookOpenCheck className="w-5 h-5 text-green-500" />
             <div>
@@ -38,7 +36,7 @@ const ActiveBorrowedBooks = () => {
                 Active Borrowed Books
               </h2>
               <p className="text-sm text-gray-500">
-                Books currently being borrowed
+                Book's borrowed by the user
               </p>
             </div>
           </div>
@@ -50,10 +48,16 @@ const ActiveBorrowedBooks = () => {
             <thead>
               <tr className="bg-gray-50">
                 <th className="px-6 py-3 text-sm font-medium text-gray-600 text-center">
-                  Borrower Name
+                  Borrower
                 </th>
                 <th className="px-6 py-3 text-sm font-medium text-gray-600 text-center">
-                  Book Title
+                  Email
+                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-600 text-center">
+                  Book
+                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-600 text-center">
+                  Genre
                 </th>
                 <th className="px-6 py-3 text-sm font-medium text-gray-600 text-center">
                   Borrow Date
@@ -65,63 +69,35 @@ const ActiveBorrowedBooks = () => {
             </thead>
             <tbody>
               {borrowed.map((b) => (
-                <tr
-                  key={b.id}
-                  className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <span className="text-green-700 font-semibold text-xs">
-                          {b.borrower
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </span>
-                      </div>
-                      <span className="text-sm font-medium text-gray-800">
-                        {b.borrower}
-                      </span>
-                    </div>
+                <tr key={b._id} className=" hover:bg-gray-100">
+                  <td className="px-6 py-4 text-sm text-gray-800 text-center">
+                    {b.user?.name}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-700 text-center">
-                    {b.book}
+                  <td className="px-6 py-4 text-sm text-gray-800 text-center">
+                    {b.user?.email}
                   </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 rounded-full">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="text-xs font-medium text-blue-700">
-                        {b.borrowDate}
-                      </span>
-                    </div>
+                  <td className="px-6 py-4 text-sm text-gray-700 text-center">
+                    {b.book?.title}
                   </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-100 rounded-full">
-                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                      <span className="text-xs font-medium text-red-700">
-                        {b.dueDate}
-                      </span>
-                    </div>
+                  <td className="px-6 py-4 text-sm text-gray-700 text-center">
+                    {b.book?.genre}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600 text-center">
+                    {new Date(b.borrowDate).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600 text-center">
+                    {new Date(b.dueDate).toLocaleDateString()}
                   </td>
                 </tr>
               ))}
 
               {borrowed.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center gap-3 text-gray-400">
-                      <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                        <BookOpenCheck size={20} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">
-                          No active borrowed books
-                        </p>
-                        <p className="text-xs mt-1">
-                          Borrowed books will appear here
-                        </p>
-                      </div>
-                    </div>
+                  <td
+                    colSpan={4}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
+                    No active borrowed books
                   </td>
                 </tr>
               )}
