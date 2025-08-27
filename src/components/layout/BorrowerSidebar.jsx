@@ -1,12 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { Home, Book, User } from "lucide-react";
 
-const Sidebar = () => {
+const BorrowerSidebar = () => {
   const navItems = [
-    { to: "/dashboard", icon: Home, label: "Dashboard" },
+    { to: "/borrower-dashboard", icon: Home, label: "Dashboard" },
     { to: "/manage-books", icon: Book, label: "Manage Books" },
-    { to: "/borrows", icon: User, label: "Borrower Management" },
+    { to: "/browse-book", icon: User, label: "Browse Books" },
+    { to: "/mybooks", icon: User, label: "My Books" },
     { to: "/profile", icon: User, label: "Profile" },
+    { to: "/contact-us", icon: User, label: "Contact us" },
   ];
 
   return (
@@ -38,4 +40,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default BorrowerSidebar;

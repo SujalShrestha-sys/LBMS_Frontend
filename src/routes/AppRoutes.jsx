@@ -9,6 +9,8 @@ import ActiveBorrowedBooks from "../components/Dashboard/ActiveBorrowedBooks";
 import BorrowManagement from "../pages/Librarian/BorrowManagement";
 import ProtectedRoute from "./ProtectedRoutes";
 import PublicRoute from "./PublicRoute";
+import BorrowerLayout from "../components/layout/BorrowerLayout";
+import BorrowerDashboard from "../pages/Borrower/BorrowerDashboard";
 
 const AppRoutes = () => {
   return (
@@ -33,10 +35,9 @@ const AppRoutes = () => {
 
         {/* Borrower Protected Routes */}
         <Route element={<ProtectedRoute allowedRoles={["borrower"]} />}>
-          <Route
-            path="/borrower-dashboard"
-            element={<div>Borrower Dashboard</div>}
-          />
+          <Route element={<BorrowerLayout />}>
+            <Route path="/borrower-dashboard" element={<BorrowerDashboard />} />
+          </Route>
         </Route>
 
         {/* Redirect unknown routes to login */}

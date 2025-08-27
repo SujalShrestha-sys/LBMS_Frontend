@@ -2,7 +2,7 @@ import React from "react";
 import { Users, ClipboardList, CheckCircle, RefreshCcw } from "lucide-react";
 import StatsCard from "../Dashboard/StatsCard";
 
-const StatsCards = ({ history, pendingRequests}) => {
+const StatsCards = ({ history, pendingRequests }) => {
   const totalRequests = history.length;
   const pending = pendingRequests.length;
   const approved = history.filter((h) => h.status === "Approved").length;

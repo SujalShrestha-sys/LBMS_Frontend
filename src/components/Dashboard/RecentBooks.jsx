@@ -1,22 +1,68 @@
 import React, { useEffect, useState } from "react";
 import { Book } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getNewReleases } from "../../services/bookServices";
+
+const dummyBooks = [
+  {
+    _id: "1",
+    title: "Atomic Habits",
+    author: "James Clear",
+    genre: "Business",
+    available: 5,
+    coverImage: "https://picsum.photos/id/1015/80/120",
+  },
+  {
+    _id: "2",
+    title: "Clean Code",
+    author: "Robert C. Martin",
+    genre: "Programming",
+    available: 2,
+    coverImage: "https://picsum.photos/id/1025/80/120",
+  },
+  {
+    _id: "3",
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    genre: "Drama",
+    available: 0,
+    coverImage: "https://picsum.photos/id/1035/80/120",
+  },
+  {
+    _id: "4",
+    title: "Deep Work",
+    author: "Cal Newport",
+    genre: "Technology",
+    available: 3,
+    coverImage: "https://picsum.photos/id/1045/80/120",
+  },
+  {
+    _id: "5",
+    title: "Rich Dad Poor Dad",
+    author: "Robert Kiyosaki",
+    genre: "Financial",
+    available: 1,
+    coverImage: "https://picsum.photos/id/1055/80/120",
+  },
+];
 
 const RecentBooks = () => {
   const [books, setBooks] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchRecent = async () => {
-      try {
-        const res = await getNewReleases();
-        setBooks(res.data.data || []);
-      } catch (err) {
-        console.error("Error fetching recent books:", err);
-      }
-    };
-    fetchRecent();
+    // For now, use dummy data
+    setBooks(dummyBooks);
+
+    // Later, replace with:
+    // const fetchRecent = async () => {
+    //   try {
+    //     const res = await getNewReleases();
+    //     setBooks(res.data.data || []);
+    //   } catch (err) {
+    //     console.error("Error fetching recent books:", err);
+    //   }
+    // };
+    // fetchRecent();
   }, []);
 
   const getStatusDisplay = (book) =>
@@ -67,19 +113,13 @@ const RecentBooks = () => {
               className="px-4 py-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-colors cursor-pointer"
             >
               <div className="flex items-center justify-between">
-                {/* Cover Image or Icon */}
+                {/* Cover Image */}
                 <div className="flex items-center gap-3">
-                  {book.coverImage ? (
-                    <img
-                      src={book.coverImage}
-                      alt={book.title}
-                      className="w-10 h-14 object-cover rounded-md border border-gray-200"
-                    />
-                  ) : (
-                    <div className="w-10 h-14 bg-gray-100 flex items-center justify-center rounded-md border border-gray-200">
-                      <Book className="w-5 h-5 text-gray-400" />
-                    </div>
-                  )}
+                  <img
+                    src={book.coverImage}
+                    alt={book.title}
+                    className="w-10 h-14 object-cover rounded-md border border-gray-200"
+                  />
 
                   <div>
                     <h3 className="font-semibold text-gray-800 text-sm">
