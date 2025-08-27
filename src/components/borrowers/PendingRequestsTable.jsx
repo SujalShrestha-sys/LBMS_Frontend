@@ -20,10 +20,13 @@ const PendingRequestsTable = ({ data, actions }) => {
         <thead className="bg-slate-50">
           <tr>
             <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
-              Borrower
+              Borrower 
             </th>
             <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
               Book
+            </th>
+            <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
+              email
             </th>
             <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
               Request Date
@@ -47,6 +50,11 @@ const PendingRequestsTable = ({ data, actions }) => {
               <td className="px-6 py-5">
                 <div className="font-medium text-slate-900">
                   {req.book?.title}
+                </div>
+              </td>
+               <td className="px-6 py-5">
+                <div className="font-small text-slate-900">
+                  {req.user?.email}
                 </div>
               </td>
               <td className="px-6 py-5">

@@ -1,49 +1,40 @@
-import React, { useState } from "react";
+// src/components/BorrowerDashboard/RecommendedBooks.jsx
+import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
-
-const sampleBooks = [
-  {
-    id: 1,
-    title: "The Legend Of 1900",
-    author: "Mark Wood",
-    cover: "https://picsum.photos/id/1015/200/300",
-  },
-  {
-    id: 2,
-    title: "The Greatest Show of 2nd Century",
-    author: "Dale Phillips",
-    cover: "https://picsum.photos/id/1025/200/300",
-  },
-  {
-    id: 3,
-    title: "The Maze Runner",
-    author: "Mr. SunserBerk",
-    cover: "https://picsum.photos/id/1035/200/300",
-  },
-  {
-    id: 4,
-    title: "Into The Wild",
-    author: "Jon Krakauer",
-    cover: "https://picsum.photos/id/1045/200/300",
-  },
-  {
-    id: 5,
-    title: "Atomic Habits",
-    author: "James Clear",
-    cover: "https://picsum.photos/id/1055/200/300",
-  },
-  {
-    id: 6,
-    title: "The Subtle Art of Not Giving a F*ck",
-    author: "Mark Manson",
-    cover: "https://picsum.photos/id/1065/200/300",
-  },
-];
+import { getRecommendedBooks } from "../../services/bookServices";
 
 const RecommendedBooks = () => {
+  const [books, setBooks] = useState([]);
   const [showAll, setShowAll] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const displayedBooks = showAll ? sampleBooks : sampleBooks.slice(0, 4);
+  // Fetch recommended books
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true);
+        const res = await getRecommendedBooks();
+        console.log("Recommended books: ", res);
+        setBooks(res.data.data || []);
+      } catch (error) {
+        console.error("Error fetching recommended books:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  const displayedBooks = showAll ? books : books.slice(0, 4);
+
+  if (loading) {
+    return (
+      <section className="bg-white rounded-xl shadow-md p-6 w-full max-w-full">
+        <p className="text-gray-500">Loading recommendations...</p>
+      </section>
+    );
+  }
 
   return (
     <section className="bg-white rounded-xl shadow-md p-6 w-full max-w-full">
@@ -61,25 +52,44 @@ const RecommendedBooks = () => {
       </p>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {displayedBooks.map((book) => (
-          <div
-            key={book.id}
-            className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-transform hover:scale-105"
-          >
-            <img
-              src={book.cover}
-              alt={book.title}
-              className="h-40 w-full object-cover rounded-md mb-3"
-            />
-            <h3 className="font-medium text-gray-800 truncate">{book.title}</h3>
-            <p className="text-sm text-gray-500">{book.author}</p>
-          </div>
-        ))}
-      </div>
+      {books.length === 0 ? (
+        <p className="text-gray-500 text-sm">No recommendations available</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {displayedBooks.map((book) => (
+            <div
+              key={book._id}
+              className="bg-white rounded-xl shadow-sm p-4 hover:shadow-lg transition-transform hover:scale-105 flex flex-col"
+            >
+              <img
+                src={book.coverImage || "https://via.placeholder.com/200x300"}
+                alt={book.title}
+                className="h-48 w-full object-cover rounded-md mb-4"
+              />
+              <h3 className="font-semibold text-gray-800 truncate mb-1">
+                {book.title}
+              </h3>
+              <p className="text-sm text-gray-500 mb-2">{book.author}</p>
+              {book.description && (
+                <p className="text-sm text-gray-600 mb-2 line-clamp-3">
+                  {book.description}
+                </p>
+              )}
+              <div className="flex justify-between items-center text-sm text-gray-500 mt-auto">
+                <span className="bg-gray-100 px-2 py-1 rounded-full text-xs">
+                  {book.genre || "N/A"}
+                </span>
+                <span>
+                  {book.available}/{book.quantity} available
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* View More Button */}
-      {sampleBooks.length > 4 && (
+      {books.length > 4 && (
         <div className="text-center mt-6">
           <button
             onClick={() => setShowAll(!showAll)}

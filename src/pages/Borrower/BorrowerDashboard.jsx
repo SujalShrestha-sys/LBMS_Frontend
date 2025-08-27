@@ -1,6 +1,6 @@
 // src/pages/Borrower/Dashboard.jsx
 import React from "react";
-import StatsCards from "../../components/BorrowerDashboard/StatsCards";
+import StatsCards from "../../components/BorrowerDashboard/BorrowerStatsCard";
 import RecommendedBooks from "../../components/BorrowerDashboard/RecommendedBooks";
 import RecentBooks from "../../components/Dashboard/RecentBooks";
 import BorrowRequestStatus from "../../components/BorrowerDashboard/BorrowRequestStatus";
@@ -8,8 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 
 const BorrowerDashboard = () => {
   const { user, loading } = useAuth();
-  console.log(user);
-  console.log(loading);
+
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
@@ -28,14 +27,14 @@ const BorrowerDashboard = () => {
       {/* Recommended Books */}
       <RecommendedBooks />
 
-      {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 w-full">
-        <div className="w-[1100px]">
-          <RecentBooks />
-        </div>
-        <div className="w-full">
-          <BorrowRequestStatus />
-        </div>
+      {/* Borrow Request Status (Full Width) */}
+      <div className="w-full">
+        <BorrowRequestStatus />
+      </div>
+
+      {/* Recent Books Section (Below Borrow Requests) */}
+      <div className="w-full">
+        <RecentBooks />
       </div>
     </div>
   );

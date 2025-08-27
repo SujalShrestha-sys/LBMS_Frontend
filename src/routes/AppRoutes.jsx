@@ -11,6 +11,7 @@ import ProtectedRoute from "./ProtectedRoutes";
 import PublicRoute from "./PublicRoute";
 import BorrowerLayout from "../components/layout/BorrowerLayout";
 import BorrowerDashboard from "../pages/Borrower/BorrowerDashboard";
+import BorrowerManageBooks from "../pages/Borrower/ManageBooks";
 
 const AppRoutes = () => {
   return (
@@ -37,6 +38,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute allowedRoles={["borrower"]} />}>
           <Route element={<BorrowerLayout />}>
             <Route path="/borrower-dashboard" element={<BorrowerDashboard />} />
+            <Route path="/manageBooks" element={<BorrowerManageBooks />} />
           </Route>
         </Route>
 

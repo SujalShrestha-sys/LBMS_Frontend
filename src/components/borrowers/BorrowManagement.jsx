@@ -25,6 +25,7 @@ const BorrowerManagement = () => {
     try {
       setLoading(true);
       const res = await fetchAllBorrowerDetails();
+      console.log("All borrower details: ", res)
       setPendingRequests(res.data.pending || []);
       setHistory(res.data.history || []);
     } catch (err) {

@@ -4,7 +4,7 @@ import { Home, Book, User } from "lucide-react";
 const BorrowerSidebar = () => {
   const navItems = [
     { to: "/borrower-dashboard", icon: Home, label: "Dashboard" },
-    { to: "/manage-books", icon: Book, label: "Manage Books" },
+    { to: "/manageBooks", icon: Book, label: "Manage Books" },
     { to: "/browse-book", icon: User, label: "Browse Books" },
     { to: "/mybooks", icon: User, label: "My Books" },
     { to: "/profile", icon: User, label: "Profile" },

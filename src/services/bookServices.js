@@ -5,6 +5,11 @@ export const getAllBooks = () => {
     return api.get("/books")
 }
 
+//getMyBooks
+export const getMyBooks = () => {
+    return api.get("/borrower/myBooks")
+}
+
 //Create book
 export const createBook = (BookData) => {
     return api.post("/books", BookData)
@@ -26,4 +31,8 @@ export const getNewReleases = () => {
 }
 export const getRecommendedBooks = () => {
     return api.get("/books/recommended");
+}
+
+export const borrowBook = (bookId) => {
+    return api.post(`/borrow/${bookId}`)
 }
