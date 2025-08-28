@@ -12,6 +12,7 @@ import PublicRoute from "./PublicRoute";
 import BorrowerLayout from "../components/layout/BorrowerLayout";
 import BorrowerDashboard from "../pages/Borrower/BorrowerDashboard";
 import BorrowerManageBooks from "../pages/Borrower/ManageBooks";
+import MyBooks from "../MyBooks/Mybooks";
 
 const AppRoutes = () => {
   return (
@@ -39,6 +40,7 @@ const AppRoutes = () => {
           <Route element={<BorrowerLayout />}>
             <Route path="/borrower-dashboard" element={<BorrowerDashboard />} />
             <Route path="/manageBooks" element={<BorrowerManageBooks />} />
+            <Route path="/my-books" element={<MyBooks />} />
           </Route>
         </Route>
 
