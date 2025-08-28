@@ -1,212 +1,241 @@
-// src/components/MyBooks/MyBooksTable.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getMyBooks } from "../services/bookServices";
+import { renewBook, returnBook } from "../services/borrower";
 import { RotateCcw, CornerUpLeft, Search, Filter } from "lucide-react";
 
-// SearchBar Component
-const SearchBar = ({ search, setSearch, status, setStatus }) => {
-  return (
-    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
-      {/* Search Input */}
-      <div className="relative w-full max-w-sm">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search books, authors..."
-          className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-        />
-      </div>
-
-      {/* Status Filter */}
-      <div className="relative">
-        <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none" />
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="pl-8 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-        >
-          <option value="All">All</option>
-          <option value="Borrowed">Borrowed</option>
-          <option value="Returned">Returned</option>
-          <option value="Overdue">Overdue</option>
-        </select>
-      </div>
+const SearchBar = ({ search, setSearch, status, setStatus }) => (
+  <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+    {/* Search Input */}
+    <div className="relative w-full max-w-sm">
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search books, authors..."
+        className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+      />
     </div>
-  );
-};
 
-// Main Table Component
+    {/* Status Filter */}
+    <div className="relative">
+      <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none" />
+      <select
+        value={status}
+        onChange={(e) => setStatus(e.target.value)}
+        className="pl-8 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+      >
+        <option value="All">All</option>
+        <option value="Approved">Approved</option>
+        <option value="Returned">Returned</option>
+        <option value="Overdue">Overdue</option>
+        <option value="Pending">Pending</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+    </div>
+  </div>
+);
+
 const MyBooksTable = () => {
-  const allBooks = [
-    {
-      id: 1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      coverImage: "/images/default-book.png",
-      borrowedDate: "2025-08-20",
-      returnDate: "2025-09-05",
-      status: "Borrowed",
-    },
-    {
-      id: 2,
-      title: "1984",
-      author: "George Orwell",
-      coverImage: "/images/default-book.png",
-      borrowedDate: "2025-08-18",
-      returnDate: "2025-09-02",
-      status: "Overdue",
-    },
-    {
-      id: 3,
-      title: "To Kill a Mockingbird",
-      author: "Harper Lee",
-      coverImage: "/images/default-book.png",
-      borrowedDate: "2025-08-10",
-      returnDate: "2025-08-25",
-      status: "Returned",
-    },
-    {
-      id: 4,
-      title: "Pride and Prejudice",
-      author: "Jane Austen",
-      coverImage: "/images/default-book.png",
-      borrowedDate: "2025-08-15",
-      returnDate: "2025-08-30",
-      status: "Borrowed",
-    },
-    {
-      id: 5,
-      title: "The Hobbit",
-      author: "J.R.R. Tolkien",
-      coverImage: "/images/default-book.png",
-      borrowedDate: "2025-08-12",
-      returnDate: "2025-08-28",
-      status: "Overdue",
-    },
-    {
-      id: 6,
-      title: "Moby Dick",
-      author: "Herman Melville",
-      coverImage: "/images/default-book.png",
-      borrowedDate: "2025-08-05",
-      returnDate: "2025-08-20",
-      status: "Returned",
-    },
-  ];
-
+  const [books, setBooks] = useState([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const booksPerPage = 5;
 
-  const filteredBooks = allBooks.filter((book) => {
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      const res = await getMyBooks();
+      setBooks(res.data.borrows || []);
+    } catch (error) {
+      console.error("Error fetching my books:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const handleReturn = async (borrowId) => {
+    try {
+      await returnBook(borrowId);
+      setBooks((prev) =>
+        prev.map((b) => (b._id === borrowId ? { ...b, status: "Returned" } : b))
+      );
+    } catch (error) {
+      console.error("Error returning book:", error);
+    }
+  };
+
+  const handleRenew = async (borrowId) => {
+    try {
+      await renewBook(borrowId);
+      setBooks((prev) =>
+        prev.map((b) =>
+          b._id === borrowId ? { ...b, renewCount: (b.renewCount || 0) + 1 } : b
+        )
+      );
+    } catch (error) {
+      console.error("Error renewing book:", error);
+    }
+  };
+
+  const filteredBooks = books.filter((borrow) => {
     const matchesSearch =
-      book.title.toLowerCase().includes(search.toLowerCase()) ||
-      book.author.toLowerCase().includes(search.toLowerCase());
-
-    const matchesStatus = status === "All" || book.status === status;
-
+      borrow.book?.title.toLowerCase().includes(search.toLowerCase()) ||
+      borrow.book?.author.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus =
+      status === "All" || borrow.status.toLowerCase() === status.toLowerCase();
     return matchesSearch && matchesStatus;
   });
 
   const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
-
   const currentBooks = filteredBooks.slice(
     (currentPage - 1) * booksPerPage,
     currentPage * booksPerPage
   );
 
-  const handleSearchChange = (value) => {
-    setSearch(value);
-    setCurrentPage(1);
-  };
-
-  const handleStatusChange = (value) => {
-    setStatus(value);
-    setCurrentPage(1);
+  const getDueDateStyle = (dueDate) => {
+    if (!dueDate) return "text-gray-400";
+    const today = new Date();
+    const due = new Date(dueDate);
+    const diff = (due - today) / (1000 * 60 * 60 * 24);
+    if (diff < 0) return "text-red-600 font-semibold";
+    if (diff <= 3) return "text-orange-500 font-medium";
+    return "text-blue-600";
   };
 
   return (
     <div className="overflow-x-auto bg-white rounded-2xl shadow-lg p-4">
-      {/* Search & Filter */}
       <SearchBar
         search={search}
-        setSearch={handleSearchChange}
+        setSearch={setSearch}
         status={status}
-        setStatus={handleStatusChange}
+        setStatus={setStatus}
       />
 
-      {/* Table */}
-      <table className="w-full text-left border-collapse text-sm">
-        <thead>
-          <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 text-gray-700 text-base tracking-wide">
-            <th className="px-6 py-4 font-semibold">Book</th>
-            <th className="px-6 py-4 font-semibold">Borrowed</th>
-            <th className="px-6 py-4 font-semibold">Return</th>
-            <th className="px-6 py-4 font-semibold">Status</th>
-            <th className="px-6 py-4 text-center font-semibold">Actions</th>
-          </tr>
-        </thead>
+      {loading ? (
+        <p className="text-center py-6 text-gray-500">Loading...</p>
+      ) : (
+        <table className="table-fixed w-full text-left border-collapse text-sm">
+          <thead>
+            <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 text-gray-700 text-base tracking-wide">
+              <th className="px-6 py-4 font-semibold w-[25%]">Book</th>
+              <th className="px-6 py-4 font-semibold w-[12%]">Borrowed</th>
+              <th className="px-6 py-4 font-semibold w-[12%]">Due Date</th>
+              <th className="px-6 py-4 font-semibold w-[10%]">Renewed</th>
+              <th className="px-6 py-4 font-semibold w-[12%]">Status</th>
+              <th className="px-6 py-4 text-center font-semibold w-[20%]">
+                Actions
+              </th>
+            </tr>
+          </thead>
 
-        <tbody className="divide-y divide-gray-100">
-          {currentBooks.length > 0 ? (
-            currentBooks.map((book, index) => (
-              <tr
-                key={book.id}
-                className={`hover:shadow-md transition duration-200 ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                }`}
-              >
-                <td className="px-4 py-3 flex items-center gap-3">
-                  <img
-                    src={book.coverImage}
-                    alt={book.title}
-                    className="w-12 h-16 rounded-md object-cover border border-gray-200 shadow-sm"
-                  />
-                  <div>
-                    <p className="font-semibold text-gray-800 text-base">
-                      {book.title}
-                    </p>
-                    <p className="text-xs text-gray-500">{book.author}</p>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-gray-700">{book.borrowedDate}</td>
-                <td className="px-4 py-3 text-gray-700">{book.returnDate}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold border ${
-                      book.status === "Returned"
-                        ? "bg-green-50 text-green-700 border-green-200"
-                        : book.status === "Overdue"
-                        ? "bg-red-50 text-red-700 border-red-200"
-                        : "bg-yellow-50 text-yellow-700 border-yellow-200"
-                    }`}
+          <tbody className="divide-y divide-gray-100">
+            {currentBooks.length > 0 ? (
+              currentBooks.map((borrow, index) => (
+                <tr
+                  key={borrow._id}
+                  className={`hover:shadow-md transition duration-200 ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  }`}
+                >
+                  <td className="px-2 py-3 flex items-center gap-3">
+                    <img
+                      src="/images/default-book.png"
+                      alt={borrow.book?.title}
+                      className="w-12 h-16 rounded-md object-cover border border-gray-200 shadow-sm"
+                    />
+                    <div>
+                      <p className="font-semibold text-gray-800 text-base">
+                        {borrow.book?.title}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {borrow.book?.author}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="px-6 py-3 text-gray-700">
+                    {new Date(borrow.borrowDate).toLocaleDateString()}
+                  </td>
+                  <td
+                    className={`px-6 py-3 ${getDueDateStyle(borrow.dueDate)}`}
                   >
-                    {book.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <div className="flex justify-center gap-2">
-                    <button className="flex items-center gap-2 px-4 py-1.5 text-sm font-semibold rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 hover:scale-105 transition">
-                      <RotateCcw size={16} /> Renew
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-1.5 text-sm font-semibold rounded-lg bg-green-100 text-green-700 hover:bg-green-200 hover:scale-105 transition">
-                      <CornerUpLeft size={16} /> Return
-                    </button>
-                  </div>
+                    {borrow.dueDate
+                      ? new Date(borrow.dueDate).toLocaleDateString()
+                      : "-"}
+                  </td>
+                  <td className=" py-3 text-center font-semibold text-indigo-600">
+                    {borrow.renewCount ?? 0}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold border ${
+                        borrow.status === "Returned"
+                          ? "bg-green-50 text-green-700 border-green-200"
+                          : borrow.status === "Overdue"
+                          ? "bg-red-50 text-red-700 border-red-200"
+                          : borrow.status === "Pending"
+                          ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                          : borrow.status === "Rejected"
+                          ? "bg-red-50 text-red-700 border-red-200"
+                          : "bg-blue-50 text-blue-700 border-blue-200"
+                      }`}
+                    >
+                      {borrow.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <div className="flex justify-center gap-2">
+                      {borrow.status === "Approved" && (
+                        <>
+                          <button
+                            onClick={() => handleRenew(borrow._id)}
+                            className="flex items-center gap-2 px-4 py-1.5 text-sm font-semibold rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 hover:scale-105 transition"
+                          >
+                            <RotateCcw size={16} /> Renew
+                          </button>
+                          <button
+                            onClick={() => handleReturn(borrow._id)}
+                            className="flex items-center gap-2 px-4 py-1.5 text-sm font-semibold rounded-lg bg-green-100 text-green-700 hover:bg-green-200 hover:scale-105 transition"
+                          >
+                            <CornerUpLeft size={16} /> Return
+                          </button>
+                        </>
+                      )}
+                      {borrow.status === "Pending" && (
+                        <span className="px-4 py-1.5 text-sm font-semibold text-yellow-600 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          Book Pending
+                        </span>
+                      )}
+                      {borrow.status === "Returned" && (
+                        <span className="px-4 py-1.5 text-sm font-semibold text-green-700 bg-green-50 border border-green-200 rounded-lg">
+                          Book Returned
+                        </span>
+                      )}
+                      {borrow.status === "Rejected" && (
+                        <span className="px-4 py-1.5 text-sm font-semibold text-red-700 bg-red-50 border border-red-200 rounded-lg">
+                          Book Rejected
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+                  No matching books found.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
-                No matching books found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      )}
 
       {/* Pagination */}
       {filteredBooks.length > 0 && (

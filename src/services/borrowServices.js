@@ -12,9 +12,6 @@ export const rejectRequest = (borrowId) => {
     return api.patch(`/borrow/reject/${borrowId}`)
 }
 
-export const returnBook = (borrowId) => {
-    return api.patch(`mark-returned/${borrowId}`)
-}
 
 export const sendReminder = (borrowId) => {
     return api.post(`/admin/send-reminder/${borrowId}`)
@@ -23,6 +20,8 @@ export const sendReminder = (borrowId) => {
 export const quickBorrowedList = () => {
     return api.get("/borrowed")
 }
+
+
 
 
 

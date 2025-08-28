@@ -4,10 +4,10 @@ import {
   fetchAllBorrowerDetails,
   approveRequest,
   rejectRequest,
-  returnBook,
   sendReminder,
 } from "../../services/borrowServices.js";
 import { Users } from "lucide-react";
+import { returnBook } from "../../services/borrower.js";
 
 import StatsCards from "./StatsCards.jsx";
 import BorrowerTabs from "./BorrowerTabs.jsx";
@@ -25,7 +25,7 @@ const BorrowerManagement = () => {
     try {
       setLoading(true);
       const res = await fetchAllBorrowerDetails();
-      console.log("All borrower details: ", res)
+      console.log("All borrower details: ", res);
       setPendingRequests(res.data.pending || []);
       setHistory(res.data.history || []);
     } catch (err) {
