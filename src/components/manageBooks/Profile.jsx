@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { Mail, User, Phone, Key, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import {
   getLibrarianProfile,
   getBorrowerProfile,

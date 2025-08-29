@@ -1,6 +1,6 @@
-// src/components/layout/BorrowerLayout.jsx
+
 import React from "react";
-import Navbar from "./Navbar"; // Can reuse the same Navbar
+import Navbar from "./Navbar"; 
 import BorrowerSidebar from "./BorrowerSidebar";
 import { useLocation, Outlet } from "react-router-dom";
 

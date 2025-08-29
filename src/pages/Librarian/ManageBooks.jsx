@@ -77,7 +77,6 @@ const ManageBooks = () => {
         await createBook(bookData);
       }
 
-      // Refetch all books to ensure data consistency
       await fetchBooks();
       setShowAddModal(false);
     } catch (error) {

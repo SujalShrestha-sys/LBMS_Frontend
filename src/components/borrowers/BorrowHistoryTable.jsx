@@ -1,4 +1,4 @@
-// src/components/borrowers/BorrowHistoryTable.jsx
+
 import { useState } from "react";
 import { BookOpen, RotateCcw, Mail, Search } from "lucide-react";
 
@@ -73,6 +73,7 @@ const BorrowHistoryTable = ({ data, actions }) => {
           <option value="Approved">Approved</option>
           <option value="Returned">Returned</option>
           <option value="Rejected">Rejected</option>
+          <option value="Pending">Pending</option>
         </select>
       </div>
 
@@ -106,48 +107,43 @@ const BorrowHistoryTable = ({ data, actions }) => {
           </thead>
           <tbody className="bg-white divide-y divide-slate-200">
             {paginatedHistory.map((record) => {
+              const today = new Date();
+              const dueDate = new Date(record.dueDate);
               const isOverdue =
                 record.status === "Approved" &&
-                new Date(record.dueDate) < new Date() &&
+                dueDate < today &&
                 !record.isReturned;
+
+              const isNearDue =
+                record.status === "Approved" &&
+                !record.isReturned &&
+                (dueDate - today) / (1000 * 60 * 60 * 24) <= 3; // 3 days before due
 
               return (
                 <tr
                   key={record._id}
                   className="hover:bg-slate-50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-5">
-                    <div className="font-medium text-slate-900">
-                      {record.user?.name}
-                    </div>
+                  <td className="px-6 py-5 font-medium text-slate-900">
+                    {record.user?.name}
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="font-medium text-slate-900">
-                      {record.book?.title}
-                    </div>
+                  <td className="px-6 py-5 font-medium text-slate-900">
+                    {record.book?.title}
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="text-slate-600">
-                      {new Date(record.borrowDate).toLocaleDateString()}
-                    </div>
+                  <td className="px-6 py-5 text-slate-600">
+                    {new Date(record.borrowDate).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-5">
-                    <div
-                      className={`text-slate-600 ${
-                        isOverdue ? "text-red-600 font-medium" : ""
-                      }`}
-                    >
-                      {record.dueDate
-                        ? new Date(record.dueDate).toLocaleDateString()
-                        : "-"}
-                    </div>
+                  <td
+                    className={`px-6 py-5 text-slate-600 ${
+                      isOverdue ? "text-red-600 font-medium" : ""
+                    }`}
+                  >
+                    {record.dueDate ? dueDate.toLocaleDateString() : "-"}
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="text-slate-600">
-                      {record.returnDate
-                        ? new Date(record.returnDate).toLocaleDateString()
-                        : "-"}
-                    </div>
+                  <td className="px-6 py-5 text-slate-600">
+                    {record.returnDate
+                      ? new Date(record.returnDate).toLocaleDateString()
+                      : "-"}
                   </td>
                   <td className="px-6 py-5">
                     <span
@@ -166,6 +162,16 @@ const BorrowHistoryTable = ({ data, actions }) => {
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex justify-center space-x-2">
+                      {record.status === "Pending" && (
+                        <span className="inline-flex items-center px-3 py-2 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-lg">
+                          Book Pending
+                        </span>
+                      )}
+                      {record.status === "Rejected" && (
+                        <span className="inline-flex items-center px-3 py-2 bg-red-100 text-red-800 text-xs font-medium rounded-lg">
+                          Book Rejected
+                        </span>
+                      )}
                       {record.status === "Approved" && !record.isReturned && (
                         <button
                           onClick={() => actions.handleReturn(record._id)}
@@ -180,7 +186,7 @@ const BorrowHistoryTable = ({ data, actions }) => {
                           Completed
                         </span>
                       )}
-                      {isOverdue && (
+                      {(isOverdue || isNearDue) && (
                         <button
                           onClick={() => actions.handleReminder(record._id)}
                           className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-violet-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md"

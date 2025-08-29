@@ -1,4 +1,3 @@
-// src/pages/Borrower/ManageBooks.jsx
 import React, { useEffect, useState } from "react";
 import { BookOpen } from "lucide-react"; // Icon for heading
 import StatsCards from "../../components/BorrowerManagementBooks/StatsCards";

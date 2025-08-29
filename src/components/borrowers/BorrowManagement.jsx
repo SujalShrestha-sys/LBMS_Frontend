@@ -1,4 +1,4 @@
-// src/components/borrowers/BorrowerManagement.jsx
+
 import React, { useEffect, useState } from "react";
 import {
   fetchAllBorrowerDetails,
@@ -7,7 +7,7 @@ import {
   sendReminder,
 } from "../../services/borrowServices.js";
 import { Users } from "lucide-react";
-import { returnBook } from "../../services/borrower.js";
+import { returnBookLibrarian } from "../../services/borrower.js";
 
 import StatsCards from "./StatsCards.jsx";
 import BorrowerTabs from "./BorrowerTabs.jsx";
@@ -51,7 +51,7 @@ const BorrowerManagement = () => {
   };
 
   const handleReturn = async (id) => {
-    await returnBook(id);
+    await returnBookLibrarian(id);
     loadData();
   };
 

@@ -14,3 +14,7 @@ export const returnBook = (borrowId) => {
 export const renewBook = (borrowId) => {
     return api.patch(`/renew/${borrowId}`);
 };
+
+export const returnBookLibrarian = (borrowId) => {
+    return api.patch(`/mark-returned/${borrowId}`)
+}

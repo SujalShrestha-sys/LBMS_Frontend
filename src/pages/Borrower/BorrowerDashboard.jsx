@@ -1,4 +1,3 @@
-// src/pages/Borrower/Dashboard.jsx
 import React from "react";
 import StatsCards from "../../components/BorrowerDashboard/BorrowerStatsCard";
 import RecommendedBooks from "../../components/BorrowerDashboard/RecommendedBooks";
