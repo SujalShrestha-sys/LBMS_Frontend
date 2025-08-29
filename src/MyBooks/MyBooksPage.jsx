@@ -2,7 +2,7 @@ import React from "react";
 import StatsCards from "./StatsCards";
 import MyBooksTable from "./MyBooksTable";
 
-const MyBooks = () => {
+const MyBooksPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -22,4 +22,4 @@ const MyBooks = () => {
   );
 };
 
-export default MyBooks;
+export default MyBooksPage;
