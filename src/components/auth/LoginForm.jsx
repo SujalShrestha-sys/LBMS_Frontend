@@ -18,7 +18,7 @@ const LoginForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -29,8 +29,15 @@ const LoginForm = () => {
     try {
       const res = await loginApi(formData);
       const { token, user } = res.data;
+
       login(user, token);
-      navigate("/dashboard");
+
+      //Redirect based on role
+      if (user.role === "librarian") {
+        navigate("/dashboard");
+      } else if (user.role === "borrower") {
+        navigate("/borrower-dashboard");
+      }
     } catch (error) {
       setError(error.response?.data?.message || "Login failed");
     }
@@ -45,18 +52,30 @@ const LoginForm = () => {
             <BookOpen className="text-blue-600" size={24} />
             <h1 className="text-2xl font-bold text-gray-800">BookHive</h1>
           </div>
-          <h2 className="text-lg font-semibold text-gray-800 mb-1">Welcome Back</h2>
-          <p className="text-gray-500 text-sm">Log in to continue to your library</p>
+          <h2 className="text-lg font-semibold text-gray-800 mb-1">
+            Welcome Back
+          </h2>
+          <p className="text-gray-500 text-sm">
+            Log in to continue to your library
+          </p>
         </div>
 
         {/* Third-Party Buttons */}
         <div className="space-y-3 mb-6">
           <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 hover:bg-gray-50 transition">
-            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" className="w-5 h-5" />
+            <img
+              src="https://www.svgrepo.com/show/355037/google.svg"
+              alt="Google"
+              className="w-5 h-5"
+            />
             Continue with Google
           </button>
           <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 hover:bg-gray-50 transition">
-            <img src="https://www.svgrepo.com/show/303128/apple-logo.svg" alt="Apple" className="w-5 h-5" />
+            <img
+              src="https://www.svgrepo.com/show/303128/apple-logo.svg"
+              alt="Apple"
+              className="w-5 h-5"
+            />
             Sign in with Apple
           </button>
         </div>
@@ -69,7 +88,9 @@ const LoginForm = () => {
         </div>
 
         {/* Error Message */}
-        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+        )}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -124,7 +145,10 @@ const LoginForm = () => {
               />
               Remember me
             </label>
-            <Link to="/forgot-password" className="text-blue-600 hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-blue-600 hover:underline"
+            >
               Forgot password?
             </Link>
           </div>
@@ -141,7 +165,10 @@ const LoginForm = () => {
         {/* Footer */}
         <p className="mt-6 text-sm text-center text-gray-600">
           Don't have an account?{" "}
-          <Link to="/signup" className="text-blue-600 hover:underline font-medium">
+          <Link
+            to="/signup"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Sign up
           </Link>
         </p>

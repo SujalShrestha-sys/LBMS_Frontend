@@ -5,24 +5,34 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-
-  const [token, setToken] = useState(
-    () => localStorage.getItem("token") || null
-  );
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Load user/token from localStorage on first mount
+    const savedUser = localStorage.getItem("user");
+    const savedToken = localStorage.getItem("token");
+
+    if (savedUser && savedToken) {
+      setUser(JSON.parse(savedUser));
+      setToken(savedToken);
+    }
+
     setLoading(false);
   }, []);
 
   const login = (userData, tokenValue) => {
-    setUser(userData);
+    const userWithRole = {
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      role: userData.role.toLowerCase(), // normalize role
+    };
+
+    setUser(userWithRole);
     setToken(tokenValue);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify(userWithRole));
     localStorage.setItem("token", tokenValue);
   };
 
@@ -40,15 +50,19 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthenticated = !!token;
 
-  const value = {
-    user,
-    token,
-    isAuthenticated,
-    loading,
-    login,
-    logout,
-    updateUser,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        isAuthenticated,
+        loading,
+        login,
+        logout,
+        updateUser,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };

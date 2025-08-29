@@ -4,7 +4,7 @@ import SignUp from "../pages/Librarian/SignUp";
 import Login from "../pages/Librarian/Login";
 import Dashboard from "../pages/Librarian/Dashboard";
 import ManageBooks from "../pages/Librarian/ManageBooks";
-import Profile from "../pages/Librarian/Profile";
+import Profile from "../pages/Shared/Profile";
 import ActiveBorrowedBooks from "../components/Dashboard/ActiveBorrowedBooks";
 import BorrowManagement from "../pages/Librarian/BorrowManagement";
 import ProtectedRoute from "./ProtectedRoutes";
@@ -41,6 +41,7 @@ const AppRoutes = () => {
             <Route path="/borrower-dashboard" element={<BorrowerDashboard />} />
             <Route path="/manageBooks" element={<BorrowerManageBooks />} />
             <Route path="/my-books" element={<MyBooks />} />
+            <Route path="/borrower-profile" element={<Profile />} />
           </Route>
         </Route>
 
