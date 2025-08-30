@@ -10,15 +10,19 @@ export const getMyBooks = () => {
     return api.get("/borrower/myBooks")
 }
 
-//Create book
+// Create book
 export const createBook = (BookData) => {
-    return api.post("/books", BookData)
-}
+    return api.post("/books", BookData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+};
 
 //Update Book
 export const updateBook = (id, BookData) => {
-    return api.put(`/books/${id}`, BookData)
-}
+    return api.put(`/books/${id}`, BookData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+};
 
 //Delete Book
 export const deleteBook = (id) => {

@@ -7,7 +7,7 @@ export const getBorrowerStats = () => {
 
 //return book
 export const returnBook = (borrowId) => {
-    return api.patch(`return/${borrowId}`)
+    return api.patch(`/return/${borrowId}`)
 }
 
 //renew book

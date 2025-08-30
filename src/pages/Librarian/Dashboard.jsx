@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import StatsCard from "../../components/Dashboard/StatsCard";
-import PendingRequest from "../../components/Dashboard/PendingRequest";
 import ActiveBorrowedBooks from "../../components/Dashboard/ActiveBorrowedBooks";
 import RecentBooks from "../../components/Dashboard/RecentBooks";
 import { Book, Users, BookOpen, TrendingUp, Clock } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { librarianStats } from "../../services/profileServices";
+import QuickPendingRequest from "../../components/Dashboard/QuickPendingRequest";
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -32,7 +32,6 @@ const Dashboard = () => {
         Please log in to access the dashboard
       </div>
     );
-
   const statsData = stats
     ? [
         {
@@ -40,42 +39,42 @@ const Dashboard = () => {
           value: stats.totalBooks,
           subtitle: "Total books available",
           icon: Book,
-          color: "bg-blue-200",
+          color: "softBlue", // pastel modern blue
         },
         {
           title: "Currently Borrowed",
           value: stats.currentlyBorrowed,
           subtitle: "Books currently borrowed",
           icon: BookOpen,
-          color: "bg-green-200",
+          color: "softGreen", // pastel modern green
         },
         {
           title: "Total Borrowers",
           value: stats.totalBorrowers,
           subtitle: "Active borrowers",
           icon: Users,
-          color: "bg-yellow-200",
+          color: "softAmber", // pastel modern yellow/amber
         },
         {
           title: "Total Librarians",
           value: stats.totalLibrarians,
           subtitle: "Staff members",
           icon: TrendingUp,
-          color: "bg-purple-200",
+          color: "softPurple", // pastel modern purple
         },
         {
           title: "Total Borrows",
-          value: stats.totalBorrowers,
+          value: stats.totalBorrows,
           subtitle: "Total borrows this year",
           icon: Clock,
-          color: "bg-red-200",
+          color: "softRed", // pastel modern red
         },
         {
           title: "Total Available Books",
           value: stats.totalAvailableBooks,
           subtitle: "Books in stock",
           icon: Book,
-          color: "bg-teal-200",
+          color: "softTeal", // pastel modern teal
         },
       ]
     : [];
@@ -101,7 +100,7 @@ const Dashboard = () => {
 
       {/* Dashboard Sections */}
       <div className="space-y-6">
-        <PendingRequest />
+        <QuickPendingRequest />
         <ActiveBorrowedBooks />
         <RecentBooks />
       </div>

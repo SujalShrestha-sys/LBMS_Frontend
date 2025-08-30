@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { BookOpenCheck } from "lucide-react";
 import api from "../../services/api";
@@ -95,7 +94,7 @@ const ActiveBorrowedBooks = () => {
                 <tr>
                   <td
                     colSpan={4}
-                    className="px-6 py-12 text-center text-gray-500"
+                    className="px-6 py-12 text-right text-gray-500"
                   >
                     No active borrowed books
                   </td>

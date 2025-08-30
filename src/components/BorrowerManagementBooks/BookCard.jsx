@@ -39,7 +39,7 @@ const BookCard = ({ book, onBorrow }) => {
           className={`w-5 h-5 transition-all duration-300 ${
             favorite ? "text-red-500" : "text-gray-400"
           }`}
-          fill={favorite ? "currentColor" : "none"} // ✅ This makes it fill red
+          fill={favorite ? "currentColor" : "none"}
         />
       </button>
 

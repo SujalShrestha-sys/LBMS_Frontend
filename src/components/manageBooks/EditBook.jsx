@@ -7,10 +7,13 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     isbn: "",
     publisher: "",
     quantity: "",
+    available: "",
     genre: "",
     description: "",
     publishedYear: "",
+    coverImage: "",
   });
+  const [coverImage, setCoverImage] = useState();
 
   // Prefill form when editing
   useEffect(() => {
@@ -21,9 +24,11 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         isbn: book.isbn || "",
         publisher: book.publisher || "",
         quantity: book.quantity || "",
+        available: book.available != undefined ? book.available : "",
         genre: book.genre || "",
         description: book.description || "",
         publishedYear: book.publishedYear || "",
+        coverImage: book.coverImage || "",
       });
     } else {
       setFormData({
@@ -32,37 +37,62 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         isbn: "",
         publisher: "",
         quantity: "",
+        available: "",
         genre: "",
         description: "",
         publishedYear: "",
+        coverImage: "",
       });
     }
   }, [isEditing, book, isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e) => {
+    setCoverImage(e.target.files[0]);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const bookData = {
+    // Create FormData to send files if any
+    const bookData = new FormData();
+
+    const payload = {
       ...formData,
-      quantity: Number(formData.quantity),
-      available: isEditing ? book.available : Number(formData.quantity),
+      quantity: formData.quantity ? Number(formData.quantity) : 0,
+      available: formData.available
+        ? Number(formData.available)
+        : formData.quantity
+        ? Number(formData.quantity)
+        : 0, // default available = quantity if empty
     };
 
+    // Append all fields to FormData
+    Object.entries(payload).forEach(([key, value]) => {
+      bookData.append(key, value);
+    });
+
+    if (coverImage) {
+      bookData.append("coverImage", coverImage);
+    }
+
+    // Call the save function
     onSave(bookData, isEditing);
   };
 
   return (
-    <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+    <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-xs flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-2 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-800">
             {isEditing ? "Edit Book" : "Add New Book"}
           </h2>
@@ -74,7 +104,7 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-2">
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -120,22 +150,43 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
             </div>
           </div>
 
-          {/* Publisher */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Publisher *
-            </label>
-            <input
-              type="text"
-              name="publisher"
-              value={formData.publisher}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          {/* Publisher & Genre */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Publisher
+              </label>
+              <input
+                type="text"
+                name="publisher"
+                value={formData.publisher}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Genre
+              </label>
+              <select
+                name="genre"
+                value={formData.genre}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Select Genre</option>
+                <option value="Technology">Technology</option>
+                <option value="Business">Business</option>
+                <option value="Programming">Programming</option>
+                <option value="Horror">Horror</option>
+                <option value="Design">Design</option>
+                <option value="Financial">Financial</option>
+                <option value="Lifestyle & Habits">Lifestyle & Habits</option>
+              </select>
+            </div>
           </div>
 
-          {/* Quantity & Genre */}
+          {/* Quantity & Available */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -153,24 +204,16 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Genre *
+                Available
               </label>
-              <select
-                name="genre"
-                value={formData.genre}
+              <input
+                type="number"
+                name="available"
+                value={formData.available}
                 onChange={handleChange}
-                required
+                min="0"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select Genre</option>
-                <option value="Technology">Technology</option>
-                <option value="Business">Business</option>
-                <option value="Programming">Programming</option>
-                <option value="Horror">Horror</option>
-                <option value="Design">Design</option>
-                <option value="Financial">Financial</option>
-                <option value="Lifestyle & Habits">Lifestyle & Habits</option>
-              </select>
+              />
             </div>
           </div>
 
@@ -200,6 +243,25 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
               rows="3"
               placeholder="Optional description"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            />
+          </div>
+
+          {/* Cover Image Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Cover Image
+            </label>
+            <input
+              type="file"
+              name="coverImage"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="block w-full text-sm text-gray-500 
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-xl file:border-0
+                file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-600
+                hover:file:bg-blue-100 cursor-pointer"
             />
           </div>
 
