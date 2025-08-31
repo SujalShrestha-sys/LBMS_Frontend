@@ -5,6 +5,8 @@ import { getRecommendedBooks } from "../../services/bookServices";
 
 const RecommendedBooks = () => {
   const [books, setBooks] = useState([]);
+
+  console.log(books);
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -62,7 +64,11 @@ const RecommendedBooks = () => {
               className="bg-white rounded-xl shadow-sm p-4 hover:shadow-lg transition-transform hover:scale-105 flex flex-col"
             >
               <img
-                src={book.coverImage || "https://via.placeholder.com/200x300"}
+                src={
+                  book.coverImage
+                    ? `http://localhost:3005${book.coverImage}` // Adjust to your backend path
+                    : "https://via.placeholder.com/200x300"
+                }
                 alt={book.title}
                 className="h-48 w-full object-cover rounded-md mb-4"
               />
