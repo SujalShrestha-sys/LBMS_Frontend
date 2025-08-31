@@ -11,9 +11,11 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     genre: "",
     description: "",
     publishedYear: "",
-    coverImage: "",
+    coverImage: null,
   });
-  const [coverImage, setCoverImage] = useState();
+
+  const [coverImage, setCoverImage] = useState(null); // selected file
+  const [fileName, setFileName] = useState(""); // display only filename
 
   // Prefill form when editing
   useEffect(() => {
@@ -28,8 +30,16 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         genre: book.genre || "",
         description: book.description || "",
         publishedYear: book.publishedYear || "",
-        coverImage: book.coverImage || "",
+        coverImage: book.coverImage || null,
       });
+
+      // Extract filename from existing coverImage
+      if (book.coverImage) {
+        const name = book.coverImage.split("/").pop(); // just file name
+        setFileName(name);
+      } else {
+        setFileName("");
+      }
     } else {
       setFormData({
         title: "",
@@ -41,14 +51,14 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         genre: "",
         description: "",
         publishedYear: "",
-        coverImage: "",
+        coverImage: null,
       });
+      setFileName("");
+      setCoverImage(null);
     }
   }, [isEditing, book, isOpen]);
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,13 +66,16 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
   };
 
   const handleFileChange = (e) => {
-    setCoverImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setCoverImage(file);
+      setFormData((prev) => ({ ...prev, coverImage: file }));
+      setFileName(file.name); // display filename
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Create FormData to send files if any
     const bookData = new FormData();
 
     const payload = {
@@ -72,19 +85,15 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         ? Number(formData.available)
         : formData.quantity
         ? Number(formData.quantity)
-        : 0, // default available = quantity if empty
+        : 0,
     };
 
-    // Append all fields to FormData
     Object.entries(payload).forEach(([key, value]) => {
-      bookData.append(key, value);
+      if (key !== "coverImage") bookData.append(key, value);
     });
 
-    if (coverImage) {
-      bookData.append("coverImage", coverImage);
-    }
+    if (coverImage) bookData.append("coverImage", coverImage);
 
-    // Call the save function
     onSave(bookData, isEditing);
   };
 
@@ -92,7 +101,7 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-xs flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
         {/* Header */}
-        <div className="px-6 py-2 border-b border-gray-200">
+        <div className="px-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-800">
             {isEditing ? "Edit Book" : "Add New Book"}
           </h2>
@@ -240,13 +249,13 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              rows="3"
+              rows="2"
               placeholder="Optional description"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
           </div>
 
-          {/* Cover Image Upload */}
+          {/* Cover Image Filename */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Cover Image
@@ -263,10 +272,31 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
                 file:bg-blue-50 file:text-blue-600
                 hover:file:bg-blue-100 cursor-pointer"
             />
+
+            {/* Modern filename display */}
+            {fileName && (
+              <div className="mt-2 flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-lg w-fit shadow-sm">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M4 12h16M4 8h16M4 4h16"
+                  />
+                </svg>
+                <span className="text-xs">{fileName}</span>
+              </div>
+            )}
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}

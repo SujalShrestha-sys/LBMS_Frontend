@@ -90,6 +90,11 @@ const RecentBooks = () => {
         <div className="p-4 space-y-3">
           {books.map((book) => {
             const Icon = categoryIcons[book.genre] || Book;
+            const coverImageUrl = book.coverImage
+              ? `http://localhost:3005/${book.coverImage.replace(/^\/?/, "")}`
+              : null;
+
+            console.log(coverImageUrl);
             return (
               <div
                 key={book._id}
@@ -99,14 +104,14 @@ const RecentBooks = () => {
                 <div className="flex items-center justify-between">
                   {/* Cover Image or Icon */}
                   <div className="flex items-center gap-3">
-                    {book.coverImage ? (
+                    {coverImageUrl ? (
                       <img
-                        src={book.coverImage}
+                        src={coverImageUrl}
                         alt={book.title}
-                        className="w-10 h-14 object-cover rounded-md border border-gray-200"
+                        className="w-12 h-16 object-cover rounded-md border border-gray-200"
                       />
                     ) : (
-                      <div className="w-10 h-14 bg-gray-100 flex items-center justify-center rounded-md border border-gray-200">
+                      <div className="w-12 h-16 bg-gray-100 flex items-center justify-center rounded-md border border-gray-200">
                         <Book className="w-5 h-5 text-gray-400" />
                       </div>
                     )}
