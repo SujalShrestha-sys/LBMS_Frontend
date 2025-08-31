@@ -36,7 +36,7 @@ const ManageBooks = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-gray-800">Explore Books</h2>
@@ -46,20 +46,30 @@ const ManageBooks = () => {
       {/* Stats */}
       <StatsCards />
 
-      {/* Search */}
-      <SearchBar search={search} setSearch={setSearch} />
-
       {/* Book Grid Section */}
       <div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-1 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-indigo-600" />
-          All Books
-        </h3>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          {/* Left: Heading and Subheading */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-1 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-indigo-600" />
+              All Books
+            </h3>
+            <p className="text-gray-500 text-sm">
+              Discover books across genres. Click on a book to borrow it
+              instantly!
+            </p>
+          </div>
 
-        {/* Subheading */}
-        <p className="text-gray-500 text-sm mb-4">
-          Discover books across genres. Click on a book to borrow it instantly!
-        </p>
+          {/* Right: Search Bar */}
+          <div className="flex-1 sm:flex-none sm:w-96">
+            <SearchBar
+              search={search}
+              setSearch={setSearch}
+              className="w-full"
+            />
+          </div>
+        </div>
 
         {/* Loading or No Books Feedback */}
         {loading ? (
