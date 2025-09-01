@@ -22,9 +22,7 @@ const BookCard = ({ book, onBorrow }) => {
     setFavorite((prev) => !prev);
   };
 
-  const image = book.coverImage?.trim()
-    ? book.coverImage
-    : "https://via.placeholder.com/150x220.png?text=Book+Cover";
+  const image = book.coverImage;
 
   const isAvailable = book.available > 0;
 

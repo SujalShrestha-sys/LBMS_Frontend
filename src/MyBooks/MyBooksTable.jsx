@@ -48,6 +48,7 @@ const MyBooksTable = () => {
     try {
       setLoading(true);
       const res = await getMyBooks();
+      console.log("MY BOOKS: ", res);
       setBooks(res.data.borrows || []);
     } catch (error) {
       console.error("Error fetching my books:", error);
@@ -146,7 +147,11 @@ const MyBooksTable = () => {
                 >
                   <td className="px-2 py-3 flex items-center gap-3">
                     <img
-                      src="/images/default-book.png"
+                      src={
+                        borrow.book?.coverImage
+                          ? `http://localhost:3005${borrow.book.coverImage}`
+                          : "/images/default-book.png"
+                      }
                       alt={borrow.book?.title}
                       className="w-12 h-16 rounded-md object-cover border border-gray-200 shadow-sm"
                     />

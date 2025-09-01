@@ -1,10 +1,10 @@
 import React from "react";
-import MyBooks from "../../MyBooks/Mybooks";
+import MyBooksPage from "../../MyBooks/MyBooksPage";
 
 const MyBooks = () => {
   return (
     <>
-      <MyBooks />
+    <MyBooksPage />
     </>
   );
 };

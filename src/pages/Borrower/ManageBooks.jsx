@@ -15,6 +15,7 @@ const ManageBooks = () => {
     try {
       setLoading(true);
       const res = await getAllBooks();
+      console.log("RESPONSE: ", res);
       setBooks(res.data.allBooks);
     } catch (err) {
       console.error("Error fetching books:", err);
