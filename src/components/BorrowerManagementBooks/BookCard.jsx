@@ -9,7 +9,7 @@ const BookCard = ({ book, onBorrow }) => {
   const handleBorrow = async () => {
     setLoading(true);
     try {
-      await borrowBook(book._id);
+      const res = await borrowBook(book._id);
       onBorrow();
     } catch (err) {
       console.error("Error borrowing book:", err);
@@ -23,6 +23,7 @@ const BookCard = ({ book, onBorrow }) => {
   };
 
   const image = book.coverImage;
+  console.log("IMAGEEE: ", image)
 
   const isAvailable = book.available > 0;
 
@@ -105,12 +106,12 @@ const BookCard = ({ book, onBorrow }) => {
         disabled={!isAvailable || loading}
         className={`mt-auto flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition ${
           isAvailable
-            ? "bg-indigo-600 text-white hover:bg-indigo-700"
+            ? "bg-blue-600 text-white hover:bg-blue-700"
             : "bg-gray-100 text-gray-400 cursor-not-allowed"
         }`}
       >
-        {loading ? "Processing..." : <BookOpen className="w-4 h-4" />}
-        {loading ? "" : "Borrow"}
+        {loading ? "Processing Book..." : <BookOpen className="w-4 h-4" />}
+        {loading ? "" : "Borrow Book"}
       </button>
     </div>
   );

@@ -12,7 +12,7 @@ const BookGrid = ({ books, onBorrow }) => {
             book={{
               ...book,
               coverImage: book.coverImage
-                ? `http://localhost:3005${book.coverImage}`
+                ? `${import.meta.env.VITE_API_BASE_URL}${book.coverImage}`
                 : "https://via.placeholder.com/200x300",
             }}
             onBorrow={onBorrow}

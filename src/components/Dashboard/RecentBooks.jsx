@@ -91,7 +91,10 @@ const RecentBooks = () => {
           {books.map((book) => {
             const Icon = categoryIcons[book.genre] || Book;
             const coverImageUrl = book.coverImage
-              ? `http://localhost:3005/${book.coverImage.replace(/^\/?/, "")}`
+              ? `${import.meta.env.VITE_API_BASE_URL}/${book.coverImage.replace(
+                  /^\/?/,
+                  ""
+                )}`
               : null;
 
             console.log(coverImageUrl);

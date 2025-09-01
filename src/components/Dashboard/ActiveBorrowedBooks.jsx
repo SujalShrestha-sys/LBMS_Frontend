@@ -69,22 +69,22 @@ const ActiveBorrowedBooks = () => {
             <tbody>
               {borrowed.map((b) => (
                 <tr key={b._id} className=" hover:bg-gray-100">
-                  <td className="px-6 py-4 text-sm text-gray-800 text-center">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-800 text-center">
                     {b.user?.name}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-800 text-center">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-800 text-center">
                     {b.user?.email}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700 text-center">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-700 text-center">
                     {b.book?.title}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700 text-center">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-700 text-center">
                     {b.book?.genre}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 text-center">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-600 text-center">
                     {new Date(b.borrowDate).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 text-center">
+                  <td className="px-6 py-4 text-sm font-medium text-gray-600 text-center">
                     {new Date(b.dueDate).toLocaleDateString()}
                   </td>
                 </tr>

@@ -3,20 +3,33 @@ import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { getRecommendedBooks } from "../../services/bookServices";
 
+const genreColors = {
+  Technology: "bg-blue-100 text-blue-700",
+  Business: "bg-green-100 text-green-700",
+  Programming: "bg-purple-100 text-purple-700",
+  Horror: "bg-red-100 text-red-700",
+  Design: "bg-pink-100 text-pink-700",
+  Financial: "bg-yellow-100 text-yellow-700",
+  "Lifestyle & Habits": "bg-orange-100 text-orange-700",
+  Default: "bg-gray-100 text-gray-700",
+};
+
+const availabilityColors = (available) => {
+  if (available === 0) return "bg-red-50 text-red-700";
+  if (available <= 2) return "bg-yellow-50 text-yellow-700";
+  return "bg-green-50 text-green-700";
+};
+
 const RecommendedBooks = () => {
   const [books, setBooks] = useState([]);
-
-  console.log(books);
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch recommended books
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setLoading(true);
         const res = await getRecommendedBooks();
-        console.log("Recommended books: ", res);
         setBooks(res.data.data || []);
       } catch (error) {
         console.error("Error fetching recommended books:", error);
@@ -24,7 +37,6 @@ const RecommendedBooks = () => {
         setLoading(false);
       }
     };
-
     fetchBooks();
   }, []);
 
@@ -66,7 +78,7 @@ const RecommendedBooks = () => {
               <img
                 src={
                   book.coverImage
-                    ? `http://localhost:3005${book.coverImage}` // Adjust to your backend path
+                    ? `${import.meta.env.VITE_API_BASE_URL}${book.coverImage}`
                     : "https://via.placeholder.com/200x300"
                 }
                 alt={book.title}
@@ -81,11 +93,20 @@ const RecommendedBooks = () => {
                   {book.description}
                 </p>
               )}
-              <div className="flex justify-between items-center text-sm text-gray-500 mt-auto">
-                <span className="bg-gray-100 px-2 py-1 rounded-full text-xs">
+
+              <div className="flex justify-between items-center text-sm mt-auto">
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                    genreColors[book.genre] || genreColors.Default
+                  }`}
+                >
                   {book.genre || "N/A"}
                 </span>
-                <span>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-semibold ${availabilityColors(
+                    book.available
+                  )}`}
+                >
                   {book.available}/{book.quantity} available
                 </span>
               </div>

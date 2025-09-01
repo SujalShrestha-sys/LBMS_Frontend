@@ -1,7 +1,6 @@
 import { Check, X, ClipboardList } from "lucide-react";
 
 const PendingRequestsTable = ({ data, actions }) => {
-  console.log("her tah data: ", data)
   if (!data || data.length === 0) {
     return (
       <div className="text-center py-16">
@@ -40,7 +39,7 @@ const PendingRequestsTable = ({ data, actions }) => {
                   <div className="flex justify-center space-x-3">
                     {noCopies ? (
                       <span className="inline-flex items-center px-4 py-2 bg-slate-300 text-slate-600 text-sm font-medium rounded-3xl cursor-not-allowed">
-                        No copies available
+                        No Copies
                       </span>
                     ) : (
                       <button

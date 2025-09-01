@@ -14,8 +14,8 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     coverImage: null,
   });
 
-  const [coverImage, setCoverImage] = useState(null); // selected file
-  const [fileName, setFileName] = useState(""); // display only filename
+  const [coverImage, setCoverImage] = useState(null);
+  const [fileName, setFileName] = useState("");
 
   // Prefill form when editing
   useEffect(() => {
@@ -70,7 +70,7 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     if (file) {
       setCoverImage(file);
       setFormData((prev) => ({ ...prev, coverImage: file }));
-      setFileName(file.name); // display filename
+      setFileName(file.name);
     }
   };
 

@@ -149,7 +149,7 @@ const MyBooksTable = () => {
                     <img
                       src={
                         borrow.book?.coverImage
-                          ? `http://localhost:3005${borrow.book.coverImage}`
+                          ? `${import.meta.env.VITE_API_BASE_URL}${borrow.book.coverImage}`
                           : "/images/default-book.png"
                       }
                       alt={borrow.book?.title}
