@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Book,
-  Briefcase,
-  Code,
-  Theater,
-  Cpu,
-  Wallet,
-  Palette,
-  Heart,
-} from "lucide-react";
+import { Book, Briefcase, Code, Theater, Cpu, Wallet, Palette, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getNewReleases } from "../../services/bookServices";
 
@@ -37,7 +28,6 @@ const RecentBooks = () => {
       </span>
     );
 
-  // Icons per category
   const categoryIcons = {
     Business: Briefcase,
     Programming: Code,
@@ -48,35 +38,31 @@ const RecentBooks = () => {
     "Lifestyle & Habits": Heart,
   };
 
-  // Modern pastel badge styles
+  // Minimal pastel colors for modern look
   const getCategoryStyle = (genre) => {
     const styles = {
-      Business: "bg-blue-50 text-blue-600",
-      Programming: "bg-purple-50 text-purple-600",
-      Drama: "bg-pink-50 text-pink-600",
-      Technology: "bg-green-50 text-green-600",
-      Financial: "bg-amber-50 text-amber-600",
-      Design: "bg-indigo-50 text-indigo-600",
-      "Lifestyle & Habits": "bg-teal-50 text-teal-600",
+      Business: "bg-blue-100 text-blue-800",
+      Programming: "bg-purple-100 text-purple-800",
+      Fantasy: "bg-pink-100 text-pink-800",
+      Technology: "bg-green-100 text-green-800",
+      Financial: "bg-amber-100 text-amber-800",
+      Design: "bg-indigo-100 text-indigo-800",
+      "Lifestyle & Habits": "bg-teal-100 text-teal-800",
     };
-    return styles[genre] || "bg-gray-50 text-gray-600";
+    return styles[genre] || "bg-gray-100 text-gray-700";
   };
 
   return (
-    <div className="w-1/2">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div className="w-full md:w-1/2">
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-3">
               <Book className="w-5 h-5 text-gray-600" />
-              <h2 className="text-lg font-semibold text-gray-800">
-                Recent Books
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-800">Recent Books</h2>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
-              Explore the latest additions in our collection
-            </p>
+            <p className="text-xs text-gray-500 mt-1">Explore the latest additions in our collection</p>
           </div>
           <button
             onClick={() => navigate("/manage-books")}
@@ -91,54 +77,44 @@ const RecentBooks = () => {
           {books.map((book) => {
             const Icon = categoryIcons[book.genre] || Book;
             const coverImageUrl = book.coverImage
-              ? `${import.meta.env.VITE_API_BASE_URL}/${book.coverImage.replace(
-                  /^\/?/,
-                  ""
-                )}`
+              ? `${import.meta.env.VITE_API_BASE_URL}/${book.coverImage.replace(/^\/?/, "")}`
               : null;
 
-            console.log(coverImageUrl);
             return (
               <div
                 key={book._id}
                 onClick={() => navigate("/manage-books")}
-                className="px-4 py-3 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+                className="px-4 py-3 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer flex items-center justify-between"
               >
-                <div className="flex items-center justify-between">
-                  {/* Cover Image or Icon */}
-                  <div className="flex items-center gap-3">
-                    {coverImageUrl ? (
-                      <img
-                        src={coverImageUrl}
-                        alt={book.title}
-                        className="w-12 h-16 object-cover rounded-md border border-gray-200"
-                      />
-                    ) : (
-                      <div className="w-12 h-16 bg-gray-100 flex items-center justify-center rounded-md border border-gray-200">
-                        <Book className="w-5 h-5 text-gray-400" />
-                      </div>
-                    )}
-
-                    <div>
-                      <h3 className="font-medium text-gray-800 text-sm">
-                        {book.title}
-                      </h3>
-                      <p className="text-xs text-gray-500">{book.author}</p>
+                {/* Cover & Info */}
+                <div className="flex items-center gap-3">
+                  {coverImageUrl ? (
+                    <img
+                      src={coverImageUrl}
+                      alt={book.title}
+                      className="w-12 h-16 object-cover rounded-md border border-gray-200"
+                    />
+                  ) : (
+                    <div className="w-12 h-16 bg-gray-100 flex items-center justify-center rounded-md border border-gray-200">
+                      <Book className="w-5 h-5 text-gray-400" />
                     </div>
-                  </div>
+                  )}
 
-                  {/* Status & Genre */}
-                  <div className="flex flex-col items-end gap-1">
-                    {getStatusDisplay(book)}
-                    <span
-                      className={`flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-md ${getCategoryStyle(
-                        book.genre
-                      )}`}
-                    >
-                      <Icon className="w-3 h-3" />
-                      {book.genre || "General"}
-                    </span>
+                  <div>
+                    <h3 className="font-medium text-gray-800 text-sm">{book.title}</h3>
+                    <p className="text-xs text-gray-500">{book.author}</p>
                   </div>
+                </div>
+
+                {/* Status & Genre */}
+                <div className="flex flex-col items-end gap-1">
+                  {getStatusDisplay(book)}
+                  <span
+                    className={`flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-md ${getCategoryStyle(book.genre)}`}
+                  >
+                    <Icon className="w-3 h-3" />
+                    {book.genre || "General"}
+                  </span>
                 </div>
               </div>
             );

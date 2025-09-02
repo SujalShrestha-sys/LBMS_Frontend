@@ -3,6 +3,7 @@ import { Mail, Lock, BookOpen, EyeOff, Eye } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginApi } from "../../services/authServices";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -32,6 +33,8 @@ const LoginForm = () => {
 
       login(user, token);
 
+      toast.success(`Welcome back, ${user.name}`);
+
       //Redirect based on role
       if (user.role === "librarian") {
         navigate("/dashboard");
@@ -39,7 +42,7 @@ const LoginForm = () => {
         navigate("/borrower-dashboard");
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Login failed");
+      toast.error(error.response?.data?.message || "Login failed");
     }
   };
 

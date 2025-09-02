@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Heart, BookOpen, CheckCircle2, XCircle } from "lucide-react";
 import { borrowBook } from "../../services/bookServices";
+import { toast } from "react-toastify";
 
 const BookCard = ({ book, onBorrow }) => {
   const [loading, setLoading] = useState(false);
@@ -10,9 +11,13 @@ const BookCard = ({ book, onBorrow }) => {
     setLoading(true);
     try {
       const res = await borrowBook(book._id);
+      toast.success("Book borrowed successfully!");
       onBorrow();
     } catch (err) {
       console.error("Error borrowing book:", err);
+      toast.error(
+        err.response?.data?.message || "Failed to borrow book. Try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -23,7 +28,6 @@ const BookCard = ({ book, onBorrow }) => {
   };
 
   const image = book.coverImage;
-  console.log("IMAGEEE: ", image)
 
   const isAvailable = book.available > 0;
 

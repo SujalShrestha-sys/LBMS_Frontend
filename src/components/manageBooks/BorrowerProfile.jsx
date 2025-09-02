@@ -33,7 +33,6 @@ const BorrowerProfile = () => {
     try {
       const res = await getBorrowerProfile();
       const user = res.data.user;
-
       if (user) {
         setProfileData({
           fullName: user.name || "",
@@ -41,7 +40,6 @@ const BorrowerProfile = () => {
           email: user.email || "",
           memberSince: user.createdAt,
         });
-
         setEditFormData({
           fullName: user.name || "",
           phone: user.phone || "",
@@ -64,12 +62,10 @@ const BorrowerProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!editFormData.oldPassword) {
       toast.error("Old password is required for any changes");
       return;
     }
-
     try {
       const res = await updateBorrowerProfile({
         name: editFormData.fullName,
@@ -78,16 +74,13 @@ const BorrowerProfile = () => {
         oldPassword: editFormData.oldPassword,
         newPassword: editFormData.newPassword,
       });
-
       const updatedUser = res?.data?.user;
-
       setProfileData({
         fullName: updatedUser.name,
         email: updatedUser.email,
         phone: updatedUser.phone || "",
         memberSince: updatedUser.createdAt,
       });
-
       updateUser(updatedUser);
       setEditFormData((prev) => ({
         ...prev,
@@ -103,24 +96,21 @@ const BorrowerProfile = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     if (!file.type.startsWith("image/")) {
       toast.error("Only image files are allowed");
       return;
     }
-
     if (file.size > 2 * 1024 * 1024) {
       toast.error("Image size should be less than 2MB");
       return;
     }
-
     const reader = new FileReader();
     reader.onloadend = () => setProfileImage(reader.result);
     reader.readAsDataURL(file);
   };
 
   return (
-    <div className="max-w-8xl mx-auto">
+    <div className="max-w-8xl mx-auto p-4">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Borrower Profile</h2>
         <p className="text-gray-600">Manage your library account settings</p>
@@ -209,10 +199,11 @@ const BorrowerProfile = () => {
                       name="fullName"
                       value={editFormData.fullName}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-400"
                     />
                   </div>
                 </div>
+
                 <div>
                   <label className="text-sm text-gray-600 mb-1 block">
                     Phone Number
@@ -224,7 +215,7 @@ const BorrowerProfile = () => {
                       name="phone"
                       value={editFormData.phone}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-400"
                     />
                   </div>
                 </div>
@@ -250,10 +241,11 @@ const BorrowerProfile = () => {
                         name="email"
                         value={editFormData.email}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-400"
                       />
                     </div>
                   </div>
+
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">
                       Old Password
@@ -265,10 +257,11 @@ const BorrowerProfile = () => {
                         name="oldPassword"
                         value={editFormData.oldPassword}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-400"
                       />
                     </div>
                   </div>
+
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">
                       New Password (optional)
@@ -280,7 +273,7 @@ const BorrowerProfile = () => {
                         name="newPassword"
                         value={editFormData.newPassword}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-400"
                       />
                     </div>
                   </div>
@@ -289,7 +282,7 @@ const BorrowerProfile = () => {
 
               <button
                 type="submit"
-                className=" w-full bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                className="w-full bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
               >
                 Save Changes
               </button>

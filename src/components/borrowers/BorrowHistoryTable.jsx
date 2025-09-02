@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { BookOpen, RotateCcw, Mail, Search } from "lucide-react";
 
@@ -13,13 +12,10 @@ const BorrowHistoryTable = ({ data, actions }) => {
     const matchesSearch =
       record.user?.name.toLowerCase().includes(search.toLowerCase()) ||
       record.book?.title.toLowerCase().includes(search.toLowerCase());
-
     const matchesFilter = filter === "All" ? true : record.status === filter;
-
     return matchesSearch && matchesFilter;
   });
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredHistory.length / rowsPerPage);
   const paginatedHistory = filteredHistory.slice(
     (currentPage - 1) * rowsPerPage,
@@ -39,6 +35,71 @@ const BorrowHistoryTable = ({ data, actions }) => {
       </div>
     );
   }
+
+  const StatusBadge = ({ status }) => {
+    const statusClasses = {
+      Approved: "bg-blue-100 text-blue-800",
+      Returned: "bg-emerald-100 text-emerald-800",
+      Rejected: "bg-red-100 text-red-800",
+      Pending: "bg-slate-100 text-slate-800",
+    };
+    return (
+      <span
+        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+          statusClasses[status] || "bg-slate-100 text-slate-800"
+        }`}
+      >
+        {status}
+      </span>
+    );
+  };
+
+  const ActionButtons = ({ record }) => {
+    const today = new Date();
+    const dueDate = new Date(record.dueDate);
+    const isOverdue =
+      record.status === "Approved" && dueDate < today && !record.isReturned;
+    const isNearDue =
+      record.status === "Approved" &&
+      !record.isReturned &&
+      (dueDate - today) / (1000 * 60 * 60 * 24) <= 3;
+
+    return (
+      <div className="flex justify-center space-x-2">
+        {record.status === "Pending" && (
+          <span className="inline-flex items-center px-3 py-2 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-lg">
+            Book Pending
+          </span>
+        )}
+        {record.status === "Rejected" && (
+          <span className="inline-flex items-center px-3 py-2 bg-red-100 text-red-800 text-xs font-medium rounded-lg">
+            Book Rejected
+          </span>
+        )}
+        {record.status === "Approved" && !record.isReturned && (
+          <button
+            onClick={() => actions.handleReturn(record._id)}
+            className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-medium rounded-lg hover:from-amber-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md"
+          >
+            <RotateCcw size={14} className="mr-1" /> Return Book
+          </button>
+        )}
+        {record.status === "Returned" && (
+          <span className="inline-flex items-center px-3 py-2 bg-slate-100 text-slate-500 text-xs font-medium rounded-lg">
+            Completed
+          </span>
+        )}
+        {(isOverdue || isNearDue) && (
+          <button
+            onClick={() => actions.handleReminder(record._id)}
+            className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-violet-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md"
+          >
+            <Mail size={14} className="mr-1" /> Remind
+          </button>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-3">
@@ -60,7 +121,6 @@ const BorrowHistoryTable = ({ data, actions }) => {
             className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all duration-200 bg-white shadow-sm"
           />
         </div>
-
         <select
           value={filter}
           onChange={(e) => {
@@ -77,7 +137,7 @@ const BorrowHistoryTable = ({ data, actions }) => {
         </select>
       </div>
 
-      {/* History Table */}
+      {/* Table */}
       <div className="overflow-hidden shadow-lg rounded-2xl border border-slate-200">
         <table className="min-w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
@@ -106,100 +166,38 @@ const BorrowHistoryTable = ({ data, actions }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-slate-200">
-            {paginatedHistory.map((record) => {
-              const today = new Date();
-              const dueDate = new Date(record.dueDate);
-              const isOverdue =
-                record.status === "Approved" &&
-                dueDate < today &&
-                !record.isReturned;
-
-              const isNearDue =
-                record.status === "Approved" &&
-                !record.isReturned &&
-                (dueDate - today) / (1000 * 60 * 60 * 24) <= 3; // 3 days before due
-
-              return (
-                <tr
-                  key={record._id}
-                  className="hover:bg-slate-50 transition-colors duration-150"
-                >
-                  <td className="px-6 py-5 font-medium text-slate-900">
-                    {record.user?.name}
-                  </td>
-                  <td className="px-6 py-5 font-medium text-slate-900">
-                    {record.book?.title}
-                  </td>
-                  <td className="px-6 py-5 text-slate-600">
-                    {new Date(record.borrowDate).toLocaleDateString()}
-                  </td>
-                  <td
-                    className={`px-6 py-5 text-slate-600 ${
-                      isOverdue ? "text-red-600 font-medium" : ""
-                    }`}
-                  >
-                    {record.dueDate ? dueDate.toLocaleDateString() : "-"}
-                  </td>
-                  <td className="px-6 py-5 text-slate-600">
-                    {record.returnDate
-                      ? new Date(record.returnDate).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td className="px-6 py-5">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                        record.status === "Approved"
-                          ? "bg-blue-100 text-blue-800"
-                          : record.status === "Returned"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : record.status === "Rejected"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-slate-100 text-slate-800"
-                      }`}
-                    >
-                      {record.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-5">
-                    <div className="flex justify-center space-x-2">
-                      {record.status === "Pending" && (
-                        <span className="inline-flex items-center px-3 py-2 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-lg">
-                          Book Pending
-                        </span>
-                      )}
-                      {record.status === "Rejected" && (
-                        <span className="inline-flex items-center px-3 py-2 bg-red-100 text-red-800 text-xs font-medium rounded-lg">
-                          Book Rejected
-                        </span>
-                      )}
-                      {record.status === "Approved" && !record.isReturned && (
-                        <button
-                          onClick={() => actions.handleReturn(record._id)}
-                          className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-medium rounded-lg hover:from-amber-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md"
-                        >
-                          <RotateCcw size={14} className="mr-1" />
-                          Return Book
-                        </button>
-                      )}
-                      {record.status === "Returned" && (
-                        <span className="inline-flex items-center px-3 py-2 bg-slate-100 text-slate-500 text-xs font-medium rounded-lg">
-                          Completed
-                        </span>
-                      )}
-                      {(isOverdue || isNearDue) && (
-                        <button
-                          onClick={() => actions.handleReminder(record._id)}
-                          className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-violet-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md"
-                        >
-                          <Mail size={14} className="mr-1" />
-                          Remind
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+            {paginatedHistory.map((record) => (
+              <tr
+                key={record._id}
+                className="hover:bg-slate-50 transition-colors duration-150"
+              >
+                <td className="px-6 py-5 font-medium text-slate-900">
+                  {record.user?.name}
+                </td>
+                <td className="px-6 py-5 font-medium text-slate-900">
+                  {record.book?.title}
+                </td>
+                <td className="px-6 py-5 text-slate-600">
+                  {new Date(record.borrowDate).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-5 text-slate-600">
+                  {record.dueDate
+                    ? new Date(record.dueDate).toLocaleDateString()
+                    : "-"}
+                </td>
+                <td className="px-6 py-5 text-slate-600">
+                  {record.returnDate
+                    ? new Date(record.returnDate).toLocaleDateString()
+                    : "-"}
+                </td>
+                <td className="px-6 py-5">
+                  <StatusBadge status={record.status} />
+                </td>
+                <td className="px-6 py-5">
+                  <ActionButtons record={record} />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

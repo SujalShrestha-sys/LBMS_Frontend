@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getMyBooks } from "../services/bookServices";
 import { renewBook, returnBook } from "../services/borrower";
 import { RotateCcw, CornerUpLeft, Search, Filter } from "lucide-react";
+import { toast } from "react-toastify";
 
 const SearchBar = ({ search, setSearch, status, setStatus }) => (
   <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
@@ -48,10 +49,10 @@ const MyBooksTable = () => {
     try {
       setLoading(true);
       const res = await getMyBooks();
-      console.log("MY BOOKS: ", res);
       setBooks(res.data.borrows || []);
     } catch (error) {
       console.error("Error fetching my books:", error);
+      toast.error("Failed to load your books.");
     } finally {
       setLoading(false);
     }
@@ -67,8 +68,10 @@ const MyBooksTable = () => {
       setBooks((prev) =>
         prev.map((b) => (b._id === borrowId ? { ...b, status: "Returned" } : b))
       );
+      toast.success("Book Returned Successfully!");
     } catch (error) {
       console.error("Error returning book:", error);
+      toast.error("Failed to return the book.");
     }
   };
 
@@ -80,8 +83,10 @@ const MyBooksTable = () => {
           b._id === borrowId ? { ...b, renewCount: (b.renewCount || 0) + 1 } : b
         )
       );
+      toast.success("Book Renewed Successfully!");
     } catch (error) {
       console.error("Error renewing book:", error);
+      toast.error("Failed to renew the book.");
     }
   };
 
@@ -149,7 +154,9 @@ const MyBooksTable = () => {
                     <img
                       src={
                         borrow.book?.coverImage
-                          ? `${import.meta.env.VITE_API_BASE_URL}${borrow.book.coverImage}`
+                          ? `${import.meta.env.VITE_API_BASE_URL}${
+                              borrow.book.coverImage
+                            }`
                           : "/images/default-book.png"
                       }
                       alt={borrow.book?.title}

@@ -6,6 +6,7 @@ import {
   approveRequest,
   rejectRequest,
 } from "../../services/borrowServices";
+import { toast } from "react-toastify";
 
 const QuickPendingRequest = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -28,13 +29,23 @@ const QuickPendingRequest = () => {
   }, []);
 
   const handleApprove = async (id) => {
-    await approveRequest(id);
-    loadData();
+    try {
+      await approveRequest(id);
+      toast.success("Book Approved Successfully.");
+      loadData();
+    } catch (error) {
+      toast.error("Failed to approve Book");
+    }
   };
 
   const handleReject = async (id) => {
-    await rejectRequest(id);
-    loadData();
+    try {
+      await rejectRequest(id);
+      toast.success("Book Rejected Successfully.");
+      loadData();
+    } catch (error) {
+      toast.error("Failed to Reject Book");
+    }
   };
 
   if (loading) {

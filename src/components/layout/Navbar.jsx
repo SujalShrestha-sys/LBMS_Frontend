@@ -15,10 +15,16 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [fade, setFade] = useState(true);
 
+  // Cycle quotes with fade effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentQuoteIndex((prev) => (prev + 1) % quotesList.length);
+      setFade(false);
+      setTimeout(() => {
+        setCurrentQuoteIndex((prev) => (prev + 1) % quotesList.length);
+        setFade(true);
+      }, 300);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -32,7 +38,11 @@ const Navbar = () => {
     <nav className="flex items-center px-6 py-3 bg-white border-b border-gray-200 relative">
       {/* Motivational Quote */}
       <div className="flex-1 text-left">
-        <p className="text-gray-600 italic text-sm sm:text-base transition-opacity duration-700">
+        <p
+          className={`text-gray-600 italic text-sm sm:text-base transition-opacity duration-300 ${
+            fade ? "opacity-100" : "opacity-0"
+          }`}
+        >
           "{quotesList[currentQuoteIndex]}"
         </p>
       </div>
@@ -57,16 +67,12 @@ const Navbar = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              user?.name?.charAt(0).toUpperCase() || (
-                <User className="w-4 h-4" />
-              )
+              user?.name?.charAt(0).toUpperCase() || <User className="w-4 h-4" />
             )}
           </div>
 
           <div className="flex flex-col text-left">
-            <span className="text-gray-800 font-medium text-sm">
-              {user?.name}
-            </span>
+            <span className="text-gray-800 font-medium text-sm">{user?.name}</span>
             <span className="text-gray-500 text-xs">{user?.email}</span>
           </div>
 
@@ -86,15 +92,11 @@ const Navbar = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  user?.name?.charAt(0).toUpperCase() || (
-                    <User className="w-4 h-4" />
-                  )
+                  user?.name?.charAt(0).toUpperCase() || <User className="w-4 h-4" />
                 )}
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-gray-800 font-medium text-sm">
-                  {user?.name}
-                </span>
+                <span className="text-gray-800 font-medium text-sm">{user?.name}</span>
                 <span className="text-gray-500 text-xs">{user?.email}</span>
               </div>
             </div>

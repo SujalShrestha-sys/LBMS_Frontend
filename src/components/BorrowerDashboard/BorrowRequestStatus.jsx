@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { ListChecks } from "lucide-react";
 import { getMyBooks } from "../../services/bookServices";
+import { toast } from "react-toastify";
 
 const BorrowRequestStatus = () => {
   const [requests, setRequests] = useState([]);
@@ -16,6 +17,10 @@ const BorrowRequestStatus = () => {
         setRequests(latestRequests);
       } catch (error) {
         console.error("Error fetching borrow requests:", error);
+        toast.error(
+          error.response?.data?.message ||
+            "Failed to fetch borrow requests. Please try again."
+        );
       } finally {
         setLoading(false);
       }

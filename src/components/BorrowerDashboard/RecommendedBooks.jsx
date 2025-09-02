@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { getRecommendedBooks } from "../../services/bookServices";
+import { toast } from "react-toastify";
 
 const genreColors = {
   Technology: "bg-blue-100 text-blue-700",
@@ -33,6 +34,10 @@ const RecommendedBooks = () => {
         setBooks(res.data.data || []);
       } catch (error) {
         console.error("Error fetching recommended books:", error);
+        toast.error(
+          error.response?.data?.message ||
+            "Failed to fetch recommended books. Please try again."
+        );
       } finally {
         setLoading(false);
       }

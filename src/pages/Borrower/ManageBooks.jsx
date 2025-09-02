@@ -16,7 +16,7 @@ const ManageBooks = () => {
       setLoading(true);
       const res = await getAllBooks();
       console.log("RESPONSE: ", res);
-      setBooks(res.data.allBooks);
+      setBooks(res.data.allBooks || []);
     } catch (err) {
       console.error("Error fetching books:", err);
     } finally {
@@ -31,9 +31,9 @@ const ManageBooks = () => {
   // Filter books based on search input
   const filteredBooks = books.filter(
     (book) =>
-      book.title.toLowerCase().includes(search.toLowerCase()) ||
-      book.author.toLowerCase().includes(search.toLowerCase()) ||
-      book.genre.toLowerCase().includes(search.toLowerCase())
+      book.title?.toLowerCase().includes(search.toLowerCase()) ||
+      book.author?.toLowerCase().includes(search.toLowerCase()) ||
+      book.genre?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -74,7 +74,9 @@ const ManageBooks = () => {
 
         {/* Loading or No Books Feedback */}
         {loading ? (
-          <p className="text-gray-500">Loading books...</p>
+          <div className="flex justify-center py-10">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+          </div>
         ) : filteredBooks.length === 0 ? (
           <p className="text-gray-500">No books found for your search.</p>
         ) : (

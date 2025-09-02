@@ -10,6 +10,7 @@ import {
   deleteBook,
   getAllBooks,
 } from "../../services/bookServices";
+import { toast } from "react-toastify";
 
 const ManageBooks = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +32,7 @@ const ManageBooks = () => {
       setBooks(res?.data?.allBooks || []);
     } catch (error) {
       console.error("Failed to fetch books", error);
+      toast.error("Failed to fetch books.");
       setBooks([]);
     } finally {
       setLoading(false);
@@ -60,9 +62,11 @@ const ManageBooks = () => {
       if (currentBook?._id) {
         await deleteBook(currentBook._id);
         setBooks((prev) => prev.filter((b) => b._id !== currentBook._id));
+        toast.success("Book deleted successfully!");
       }
     } catch (err) {
       console.error("Failed to delete book", err);
+      toast.error("Failed to delete book.");
     } finally {
       setShowDeleteModal(false);
       setCurrentBook(null);
@@ -73,14 +77,17 @@ const ManageBooks = () => {
     try {
       if (editing && currentBook?._id) {
         await updateBook(currentBook._id, bookData);
+        toast.success("Book updated successfully!");
       } else {
         await createBook(bookData);
+        toast.success("Book added successfully!");
       }
 
       await fetchBooks();
       setShowAddModal(false);
     } catch (error) {
       console.error("Failed to save book", error);
+      toast.error("Failed to save book.");
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, BookOpen, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { signupApi } from "../../services/authServices";
+import { toast } from "react-toastify";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -25,13 +26,13 @@ const SignUpForm = () => {
       const res = await signupApi(formData);
 
       if (res.data.success) {
-        alert("Signup successful! Please login to continue.");
+        toast.success("Signup successful! Please login to continue.");
         navigate("/login");
       } else {
-        alert("Signup failed: Please try again.");
+        toast.error("Signup failed: Please try again.");
       }
     } catch (error) {
-      alert(error.response?.data?.message || "Signup failed");
+      toast.error(error.response?.data?.message || "Signup failed");
     }
   };
 

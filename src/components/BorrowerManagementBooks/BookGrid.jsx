@@ -2,7 +2,6 @@ import React from "react";
 import BookCard from "./BookCard";
 
 const BookGrid = ({ books, onBorrow }) => {
-  console.log("IS Image Comming?: ", books.coverImage);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
       {books && books.length > 0 ? (
