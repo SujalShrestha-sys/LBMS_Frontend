@@ -62,31 +62,47 @@ const BorrowerProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!editFormData.oldPassword) {
-      toast.error("Old password is required for any changes");
-      return;
+
+    // Only check old password if user wants to change password
+    if (editFormData.newPassword && editFormData.newPassword.trim() !== "") {
+      if (!editFormData.oldPassword) {
+        toast.error("Old password is required to change password");
+        return;
+      }
     }
+
     try {
-      const res = await updateBorrowerProfile({
+      const payload = {
         name: editFormData.fullName,
         email: editFormData.email,
         phone: editFormData.phone,
-        oldPassword: editFormData.oldPassword,
-        newPassword: editFormData.newPassword,
-      });
+      };
+
+      // Include password fields only if newPassword is provided
+      if (editFormData.newPassword && editFormData.newPassword.trim() !== "") {
+        payload.oldPassword = editFormData.oldPassword;
+        payload.newPassword = editFormData.newPassword;
+      }
+
+      const res = await updateBorrowerProfile(payload);
       const updatedUser = res?.data?.user;
+
       setProfileData({
         fullName: updatedUser.name,
         email: updatedUser.email,
         phone: updatedUser.phone || "",
         memberSince: updatedUser.createdAt,
       });
+
       updateUser(updatedUser);
+
+      // Clear password fields
       setEditFormData((prev) => ({
         ...prev,
         oldPassword: "",
         newPassword: "",
       }));
+
       toast.success("Profile updated successfully!");
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update profile");
