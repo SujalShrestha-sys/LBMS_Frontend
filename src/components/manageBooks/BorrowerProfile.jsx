@@ -215,6 +215,7 @@ const BorrowerProfile = () => {
                       name="phone"
                       value={editFormData.phone}
                       onChange={handleChange}
+                      placeholder="Enter Your Number"
                       className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-400"
                     />
                   </div>
@@ -257,6 +258,7 @@ const BorrowerProfile = () => {
                         name="oldPassword"
                         value={editFormData.oldPassword}
                         onChange={handleChange}
+                        placeholder="Enter Your Password"
                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-400"
                       />
                     </div>
@@ -273,6 +275,7 @@ const BorrowerProfile = () => {
                         name="newPassword"
                         value={editFormData.newPassword}
                         onChange={handleChange}
+                        placeholder="Enter New Password"
                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-400"
                       />
                     </div>
