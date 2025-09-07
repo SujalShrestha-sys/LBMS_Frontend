@@ -14,7 +14,6 @@ const Dashboard = () => {
   const fetchStats = async () => {
     try {
       const res = await librarianStats();
-      console.log(res);
       setStats(res.data);
     } catch (error) {
       console.error("failed to fetch stats: ", error);

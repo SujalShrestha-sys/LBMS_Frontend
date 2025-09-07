@@ -20,7 +20,6 @@ const ContactPage = () => {
 
       {/* Contact Stats*/}
       <ContactStats />
-
       <ContactForm />
       <MessagesTable />
     </div>

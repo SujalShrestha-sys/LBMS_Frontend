@@ -44,7 +44,6 @@ const ContactForm = () => {
     setLoading(true);
     try {
       const { data } = await createMessage(formData);
-      console.log("Message: ", data)
 
       if (data.success) {
         toast.success(data.message || "Message submitted successfully!");
@@ -61,7 +60,7 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 rounded-xl shadow-lg max-w-lg mx-auto mb-4 border-gray-200">
+    <div className="bg-gradient-to-br from-white via-gray-50 to-blue-50 p-6 rounded-xl shadow-lg max-w-lg mx-auto mb-8 border-gray-200">
       {/* Heading */}
       <div className="flex items-center gap-2 mb-2">
         <Inbox className="w-6 h-6 text-blue-600" />

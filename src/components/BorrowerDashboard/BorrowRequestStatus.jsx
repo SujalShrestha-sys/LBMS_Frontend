@@ -30,9 +30,14 @@ const BorrowRequestStatus = () => {
 
   if (loading) {
     return (
-      <section className="bg-white rounded-xl shadow-md p-6 max-w-4xl mx-auto">
-        <p className="text-gray-500 text-center">Loading requests...</p>
-      </section>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {["1", "2", "3"].map((s) => (
+          <div
+            key={s}
+            className="bg-white rounded-lg p-5 shadow-sm animate-pulse h-24"
+          ></div>
+        ))}
+      </div>
     );
   }
 

@@ -1,7 +1,11 @@
 import React from "react";
-
+import LibrarianContact from "../../components/contact/LibrarianContact";
 const ContactPage = () => {
-  return <div>contact page</div>;
+  return (
+    <>
+      <LibrarianContact />
+    </>
+  );
 };
 
 export default ContactPage;

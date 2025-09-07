@@ -10,3 +10,11 @@ export const createMessage = (data) => {
 export const getAllMessages = () => {
     return api.get("/contact/getMessage")
 }
+
+export const replyToMessage = (id, reply) => {
+   return api.put(`/contact/reply/${id}`, { reply })
+}
+
+export const markResolved = (id) => {
+   return api.put(`/contact/resolve/${id}`)
+}

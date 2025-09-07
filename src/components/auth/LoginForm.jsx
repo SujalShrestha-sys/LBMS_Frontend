@@ -73,14 +73,6 @@ const LoginForm = () => {
             />
             Continue with Google
           </button>
-          <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 hover:bg-gray-50 transition">
-            <img
-              src="https://www.svgrepo.com/show/303128/apple-logo.svg"
-              alt="Apple"
-              className="w-5 h-5"
-            />
-            Sign in with Apple
-          </button>
         </div>
 
         {/* Divider */}

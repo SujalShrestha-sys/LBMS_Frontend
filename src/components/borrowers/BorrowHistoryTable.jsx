@@ -5,7 +5,7 @@ const BorrowHistoryTable = ({ data, actions }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 4;
+  const rowsPerPage = 5;
 
   // Filter + Search
   const filteredHistory = data.filter((record) => {
