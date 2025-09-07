@@ -1,4 +1,3 @@
-// src/components/BorrowerManageBooks/StatsCards.jsx
 import React, { useEffect, useState } from "react";
 import { BookOpen, CheckCircle, Layers } from "lucide-react";
 import { getAllBooks } from "../../services/bookServices";
@@ -13,7 +12,6 @@ const StatsCards = () => {
   const fetchStats = async () => {
     try {
       const res = await getAllBooks();
-      console.log("lau here data: ", res);
       const books = res.data.allBooks || [];
 
       const total = books.length;

@@ -12,7 +12,6 @@ export const rejectRequest = (borrowId) => {
     return api.patch(`/borrow/reject/${borrowId}`)
 }
 
-
 export const sendReminder = (borrowId) => {
     return api.post(`/admin/send-reminder/${borrowId}`)
 }

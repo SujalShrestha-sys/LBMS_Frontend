@@ -126,7 +126,7 @@ const BorrowerProfile = () => {
   };
 
   return (
-    <div className="max-w-8xl mx-auto p-4">
+    <div className="max-w-8xl mx-auto">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Borrower Profile</h2>
         <p className="text-gray-600">Manage your library account settings</p>

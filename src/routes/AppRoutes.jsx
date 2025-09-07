@@ -13,6 +13,8 @@ import BorrowerLayout from "../components/layout/BorrowerLayout";
 import BorrowerDashboard from "../pages/Borrower/BorrowerDashboard";
 import BorrowerManageBooks from "../pages/Borrower/ManageBooks";
 import MyBooksPage from "../MyBooks/MyBooksPage";
+import ContactPage from "../pages/Borrower/ContactPage";
+import ContactMe from "../pages/Librarian/ContactPage";
 
 const AppRoutes = () => {
   return (
@@ -32,6 +34,7 @@ const AppRoutes = () => {
             <Route path="/borrowed-books" element={<ActiveBorrowedBooks />} />
             <Route path="/borrows" element={<BorrowManagement />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/contactMe" element={<ContactMe />} />
           </Route>
         </Route>
 
@@ -42,6 +45,7 @@ const AppRoutes = () => {
             <Route path="/manageBooks" element={<BorrowerManageBooks />} />
             <Route path="/my-books" element={<MyBooksPage />} />
             <Route path="/borrower-profile" element={<Profile />} />
+            <Route path="/contactUs" element={<ContactPage />} />
           </Route>
         </Route>
 

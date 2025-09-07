@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Home, BookOpen, Users, UserRound } from "lucide-react";
+import { Home, BookOpen, Users, UserRound, PhoneCall } from "lucide-react";
 
 const Sidebar = () => {
   const navItems = [
@@ -7,6 +7,7 @@ const Sidebar = () => {
     { to: "/manage-books", icon: BookOpen, label: "Manage Books" },
     { to: "/borrows", icon: Users, label: "Borrower Management" },
     { to: "/profile", icon: UserRound, label: "Profile" },
+    { to: "/contactMe", icon: PhoneCall, label: "Contact" },
   ];
 
   return (

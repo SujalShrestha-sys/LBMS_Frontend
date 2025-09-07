@@ -7,7 +7,7 @@ const BorrowerSidebar = () => {
     { to: "/manageBooks", icon: Library, label: "Manage Books" },
     { to: "/my-books", icon: BookOpen, label: "My Books" },
     { to: "/borrower-profile", icon: UserRound, label: "Profile" },
-    { to: "/contact-us", icon: PhoneCall, label: "Contact Us" },
+    { to: "/contactUs", icon: PhoneCall, label: "Contact Us" },
   ];
 
   return (

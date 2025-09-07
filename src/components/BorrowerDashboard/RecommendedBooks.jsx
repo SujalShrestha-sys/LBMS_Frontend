@@ -1,4 +1,3 @@
-// src/components/BorrowerDashboard/RecommendedBooks.jsx
 import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { getRecommendedBooks } from "../../services/bookServices";
