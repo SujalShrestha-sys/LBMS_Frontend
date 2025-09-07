@@ -3,7 +3,7 @@ import { Inbox, Clock, CheckCircle, Archive, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const LibrarianMessageTable = () => {
+const MessagesTable = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState(null);
@@ -133,7 +133,7 @@ const LibrarianMessageTable = () => {
       </div>
 
       {/* Modal */}
-      {isModalOpen && selectedBorrow && (
+      {isModalOpen && selectedMessage && (
         <div className="fixed inset-0 bg-blue-200/30 backdrop-blur-xs flex justify-center items-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-lg relative animate-fadeIn">
             {/* Close Button */}
@@ -148,60 +148,61 @@ const LibrarianMessageTable = () => {
             <div className="flex items-center gap-3 mb-6">
               <Inbox className="w-6 h-6 text-blue-600" />
               <h3 className="text-2xl font-semibold text-gray-800">
-                Borrow Details
+                Message Details
               </h3>
             </div>
 
-            {/* Borrow Details */}
+            {/* Message Details */}
             <div className="space-y-3 text-gray-700">
               <p>
-                <span className="font-semibold">Borrower:</span>{" "}
-                {selectedBorrow.borrowerName}
+                <span className="font-semibold">Name:</span>{" "}
+                {selectedMessage.name}
               </p>
               <p>
-                <span className="font-semibold">Book:</span>{" "}
-                {selectedBorrow.bookTitle}
+                <span className="font-semibold">Email:</span>{" "}
+                {selectedMessage.email}
               </p>
-              {selectedBorrow.message && (
-                <p>
-                  <span className="font-semibold">Message:</span>{" "}
-                  {selectedBorrow.message}
-                </p>
-              )}
+              <p>
+                <span className="font-semibold">Subject:</span>{" "}
+                {selectedMessage.subject}
+              </p>
               <p>
                 <span className="font-semibold">Status:</span>{" "}
-                {selectedBorrow.status}
+                {selectedMessage.status}
+              </p>
+              <p>
+                <span className="font-semibold">Message:</span>{" "}
+                {selectedMessage.message}
               </p>
             </div>
 
-            {/* Reply Textarea */}
-            <textarea
-              className="w-full border border-gray-300 rounded-md p-2 mt-4"
-              rows={4}
-              placeholder="Type your reply here..."
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-            />
+            {/* Librarian Reply Section */}
+            <div className="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h4 className="text-lg font-semibold mb-2 text-gray-800">
+                Librarian Reply
+              </h4>
+              {selectedMessage.reply ? (
+                <div>
+                  <p className="text-gray-700">{selectedMessage.reply}</p>
+                  {selectedMessage.repliedAt && (
+                    <p className="text-xs text-gray-400 mt-2">
+                      Replied on{" "}
+                      {new Date(selectedMessage.repliedAt).toLocaleString()}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="text-gray-500 italic">No reply yet.</p>
+              )}
+            </div>
 
             {/* Footer Buttons */}
-            <div className="mt-4 flex justify-end gap-3">
-              <button
-                onClick={handleSendReply}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-              >
-                Send Reply
-              </button>
+            <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={closeModal}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
               >
-                Cancel
-              </button>
-              <button
-                onClick={handleMarkResolved}
-                className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition"
-              >
-                Mark as Resolved
+                <span>Close</span>
               </button>
             </div>
           </div>
@@ -211,4 +212,4 @@ const LibrarianMessageTable = () => {
   );
 };
 
-export default LibrarianMessageTable;
+export default MessagesTable;
