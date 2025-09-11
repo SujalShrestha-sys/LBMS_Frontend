@@ -7,8 +7,6 @@ import {
 } from "../../services/borrowServices.js";
 import { returnBookLibrarian } from "../../services/borrower.js";
 import { Users } from "lucide-react";
-
-// Components
 import StatsCards from "./StatsCards.jsx";
 import BorrowerTabs from "./BorrowerTabs.jsx";
 import PendingRequestsTable from "./PendingRequestsTable.jsx";
@@ -49,6 +47,7 @@ const BorrowerManagement = () => {
       toast.error("Failed to approve book request");
     }
   };
+
   const handleReject = async (id) => {
     try {
       await rejectRequest(id);
@@ -58,6 +57,7 @@ const BorrowerManagement = () => {
       toast.error("Failed to Reject Request");
     }
   };
+
   const handleReturn = async (id) => {
     try {
       await returnBookLibrarian(id);
@@ -67,6 +67,7 @@ const BorrowerManagement = () => {
       toast.error("Failed to return Book.");
     }
   };
+
   const handleReminder = async (id) => {
     try {
       await sendReminder(id);

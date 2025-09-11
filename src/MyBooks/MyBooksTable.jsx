@@ -146,17 +146,14 @@ const MyBooksTable = () => {
               currentBooks.map((borrow, index) => (
                 <tr
                   key={borrow._id}
-                  className={`hover:shadow-md transition duration-200 ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  }`}
+                  className={`hover:shadow-md transition duration-200 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    }`}
                 >
                   <td className="px-2 py-3 flex items-center gap-3">
                     <img
                       src={
                         borrow.book?.coverImage
-                          ? `${import.meta.env.VITE_API_BASE_URL}${
-                              borrow.book.coverImage
-                            }`
+                          ? borrow.book.coverImage
                           : "/images/default-book.png"
                       }
                       alt={borrow.book?.title}
@@ -186,17 +183,16 @@ const MyBooksTable = () => {
                   </td>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold border ${
-                        borrow.status === "Returned"
-                          ? "bg-green-50 text-green-700 border-green-200"
-                          : borrow.status === "Overdue"
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold border ${borrow.status === "Returned"
+                        ? "bg-green-50 text-green-700 border-green-200"
+                        : borrow.status === "Overdue"
                           ? "bg-red-50 text-red-700 border-red-200"
                           : borrow.status === "Pending"
-                          ? "bg-yellow-50 text-yellow-700 border-yellow-200"
-                          : borrow.status === "Rejected"
-                          ? "bg-red-50 text-red-700 border-red-200"
-                          : "bg-blue-50 text-blue-700 border-blue-200"
-                      }`}
+                            ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                            : borrow.status === "Rejected"
+                              ? "bg-red-50 text-red-700 border-red-200"
+                              : "bg-blue-50 text-blue-700 border-blue-200"
+                        }`}
                     >
                       {borrow.status}
                     </span>

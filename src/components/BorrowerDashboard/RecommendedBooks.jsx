@@ -11,6 +11,7 @@ const genreColors = {
   Design: "bg-pink-100 text-pink-700",
   Financial: "bg-yellow-100 text-yellow-700",
   "Lifestyle & Habits": "bg-orange-100 text-orange-700",
+  Crime: "bg-violet-200 text-violet-700",
   Default: "bg-gray-100 text-gray-700",
 };
 
@@ -35,7 +36,7 @@ const RecommendedBooks = () => {
         console.error("Error fetching recommended books:", error);
         toast.error(
           error.response?.data?.message ||
-            "Failed to fetch recommended books. Please try again."
+          "Failed to fetch recommended books. Please try again."
         );
       } finally {
         setLoading(false);
@@ -80,11 +81,7 @@ const RecommendedBooks = () => {
               className="bg-white rounded-xl shadow-sm p-4 hover:shadow-lg transition-transform hover:scale-105 flex flex-col"
             >
               <img
-                src={
-                  book.coverImage
-                    ? `${import.meta.env.VITE_API_BASE_URL}${book.coverImage}`
-                    : "https://via.placeholder.com/200x300"
-                }
+                src={book.coverImage || "https://via.placeholder.com/200x300"}
                 alt={book.title}
                 className="h-48 w-full object-cover rounded-md mb-4"
               />
@@ -100,9 +97,8 @@ const RecommendedBooks = () => {
 
               <div className="flex justify-between items-center text-sm mt-auto">
                 <span
-                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    genreColors[book.genre] || genreColors.Default
-                  }`}
+                  className={`px-2 py-1 rounded-full text-xs font-semibold ${genreColors[book.genre] || genreColors.Default
+                    }`}
                 >
                   {book.genre || "N/A"}
                 </span>

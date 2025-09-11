@@ -39,9 +39,8 @@ const BookCard = ({ book, onBorrow }) => {
         className="absolute top-3 right-3 bg-white rounded-full shadow p-2 hover:scale-110 transition z-10"
       >
         <Heart
-          className={`w-5 h-5 transition-all duration-300 ${
-            favorite ? "text-red-500" : "text-gray-400"
-          }`}
+          className={`w-5 h-5 transition-all duration-300 ${favorite ? "text-red-500" : "text-gray-400"
+            }`}
           fill={favorite ? "currentColor" : "none"}
         />
       </button>
@@ -77,11 +76,10 @@ const BookCard = ({ book, onBorrow }) => {
           ISBN: {book.isbn}
         </span>
         <span
-          className={`px-2 py-1 rounded-md ${
-            isAvailable
-              ? "bg-green-50 text-green-600"
-              : "bg-red-50 text-red-500"
-          }`}
+          className={`px-2 py-1 rounded-md ${isAvailable
+            ? "bg-green-50 text-green-600"
+            : "bg-red-50 text-red-500"
+            }`}
         >
           {book.available}/{book.quantity}
         </span>
@@ -89,9 +87,8 @@ const BookCard = ({ book, onBorrow }) => {
 
       {/* Availability */}
       <div
-        className={`flex items-center gap-1 text-sm font-medium mb-3 ${
-          isAvailable ? "text-green-600" : "text-red-500"
-        }`}
+        className={`flex items-center gap-1 text-sm font-medium mb-3 ${isAvailable ? "text-green-600" : "text-red-500"
+          }`}
       >
         {isAvailable ? (
           <>
@@ -108,11 +105,10 @@ const BookCard = ({ book, onBorrow }) => {
       <button
         onClick={handleBorrow}
         disabled={!isAvailable || loading}
-        className={`mt-auto flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition ${
-          isAvailable
-            ? "bg-blue-600 text-white hover:bg-blue-700"
-            : "bg-gray-100 text-gray-400 cursor-not-allowed"
-        }`}
+        className={`mt-auto flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition ${isAvailable
+          ? "bg-blue-600 text-white hover:bg-blue-700"
+          : "bg-gray-100 text-gray-400 cursor-not-allowed"
+          }`}
       >
         {loading ? "Processing Book..." : <BookOpen className="w-4 h-4" />}
         {loading ? "" : "Borrow Book"}

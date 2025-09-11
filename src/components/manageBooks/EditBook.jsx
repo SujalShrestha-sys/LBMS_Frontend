@@ -11,7 +11,6 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     genre: "",
     description: "",
     publishedYear: "",
-    coverImage: null,
   });
 
   const [coverImage, setCoverImage] = useState(null);
@@ -30,16 +29,10 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         genre: book.genre || "",
         description: book.description || "",
         publishedYear: book.publishedYear || "",
-        coverImage: book.coverImage || null,
       });
 
-      // Extract filename from existing coverImage
-      if (book.coverImage) {
-        const name = book.coverImage.split("/").pop(); // just file name
-        setFileName(name);
-      } else {
-        setFileName("");
-      }
+      setCoverImage(null); // reset to avoid mixing old/new
+      setFileName(book.coverImage ? book.coverImage.split("/").pop() : "");
     } else {
       setFormData({
         title: "",
@@ -51,7 +44,6 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
         genre: "",
         description: "",
         publishedYear: "",
-        coverImage: null,
       });
       setFileName("");
       setCoverImage(null);
@@ -69,7 +61,6 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     const file = e.target.files[0];
     if (file) {
       setCoverImage(file);
-      setFormData((prev) => ({ ...prev, coverImage: file }));
       setFileName(file.name);
     }
   };
@@ -78,21 +69,26 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
     e.preventDefault();
     const bookData = new FormData();
 
+    // Ensure numeric fields are numbers
     const payload = {
       ...formData,
       quantity: formData.quantity ? Number(formData.quantity) : 0,
       available: formData.available
         ? Number(formData.available)
         : formData.quantity
-        ? Number(formData.quantity)
-        : 0,
+          ? Number(formData.quantity)
+          : 0,
     };
 
+    // Append text fields
     Object.entries(payload).forEach(([key, value]) => {
-      if (key !== "coverImage") bookData.append(key, value);
+      bookData.append(key, value);
     });
 
-    if (coverImage) bookData.append("coverImage", coverImage);
+    // Append cover image ONLY if new one selected
+    if (coverImage) {
+      bookData.append("coverImage", coverImage);
+    }
 
     onSave(bookData, isEditing);
   };
@@ -191,6 +187,9 @@ const EditBook = ({ isOpen, onClose, book, isEditing, onSave }) => {
                 <option value="Design">Design</option>
                 <option value="Financial">Financial</option>
                 <option value="Lifestyle & Habits">Lifestyle & Habits</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Historical Fiction">Historical Fiction</option>
+                <option value="Classic">Classic</option>
               </select>
             </div>
           </div>

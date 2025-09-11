@@ -85,8 +85,10 @@ const ManageBooks = () => {
 
       await fetchBooks();
       setShowAddModal(false);
+      setCurrentBook(null);
+      setEditing(false)
     } catch (error) {
-      console.error("Failed to save book", error);
+      console.error("Failed to save book", error.message);
       toast.error("Failed to save book.");
     }
   };

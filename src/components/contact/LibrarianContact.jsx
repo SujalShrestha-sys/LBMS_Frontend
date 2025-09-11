@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Inbox, Clock, CheckCircle, Archive, Eye } from "lucide-react";
 import { toast } from "react-toastify";
-import { getAllMessages } from "../../services/contactServices.js"; // Fetch messages
+import { getAllMessages } from "../../services/contactServices.js";
 import { replyToMessage, markResolved } from "../../services/contactServices.js";
 
 const LibrarianContact = () => {

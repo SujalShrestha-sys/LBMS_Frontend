@@ -10,7 +10,7 @@ const ManageBooksTable = ({
 }) => {
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 5;
 
   // Apply search + filter
   useEffect(() => {
@@ -64,9 +64,8 @@ const ManageBooksTable = ({
             .map((book, idx) => (
               <tr
                 key={book._id}
-                className={`hover:shadow-md transition duration-200 ${
-                  idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                }`}
+                className={`hover:shadow-md transition duration-200 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  }`}
               >
                 <td className="px-6 py-4 font-medium text-gray-800">
                   {book.title}

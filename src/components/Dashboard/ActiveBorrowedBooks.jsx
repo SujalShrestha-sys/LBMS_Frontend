@@ -23,20 +23,26 @@ const ActiveBorrowedBooks = () => {
 
   const genreBadgeColor = (genre) => {
     switch (genre) {
-      case "fiction":
+      case "Fiction":
         return "bg-purple-100 text-purple-800";
-      case "science":
+      case "Science":
         return "bg-blue-100 text-blue-800";
       case "Lifestyle & Habits":
         return "bg-yellow-100 text-yellow-800";
       case "Design":
         return "bg-pink-100 text-pink-800";
-      case "fantasy":
-        return "bg-indigo-100 text-indigo-800";
+      case "Fantasy":
+        return "bg-lime-100 text-lime-800";
       case "Business":
         return "bg-teal-100 text-teal-800";
       case "Financial":
         return "bg-orange-100 text-orange-800";
+      case "Classic":
+        return "bg-sky-100 text-sky-800"
+      case "Historical Fiction":
+        return "bg-emerald-100 text-emerald-800"
+      case "Horror":
+        return "bg-purple-100 text-indigo-800"
       default:
         return "bg-gray-100 text-gray-700";
     }
@@ -119,11 +125,10 @@ const ActiveBorrowedBooks = () => {
                     {new Date(b.borrowDate).toLocaleDateString()}
                   </td>
                   <td
-                    className={`px-6 py-4 text-sm font-medium text-center ${
-                      isOverdue(b.dueDate)
-                        ? "text-red-600 font-semibold"
-                        : "text-gray-600"
-                    }`}
+                    className={`px-6 py-4 text-sm font-medium text-center ${isOverdue(b.dueDate)
+                      ? "text-red-600 font-semibold"
+                      : "text-gray-600"
+                      }`}
                   >
                     {new Date(b.dueDate).toLocaleDateString()}
                   </td>

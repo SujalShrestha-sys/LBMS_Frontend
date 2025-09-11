@@ -10,9 +10,8 @@ const BookGrid = ({ books, onBorrow }) => {
             key={book._id}
             book={{
               ...book,
-              coverImage: book.coverImage
-                ? `${import.meta.env.VITE_API_BASE_URL}${book.coverImage}`
-                : "https://via.placeholder.com/200x300",
+              coverImage:
+                book.coverImage || "https://via.placeholder.com/200x300",
             }}
             onBorrow={onBorrow}
           />

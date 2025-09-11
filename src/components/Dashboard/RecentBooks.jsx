@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Book, Briefcase, Code, Theater, Cpu, Wallet, Palette, Heart } from "lucide-react";
+import { Book, Briefcase, Code, Theater, Cpu, Wallet, Palette, Heart, HeartCrack, HouseWifi } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getNewReleases } from "../../services/bookServices";
 
@@ -36,6 +36,8 @@ const RecentBooks = () => {
     Financial: Wallet,
     Design: Palette,
     "Lifestyle & Habits": Heart,
+    Fantasy: HouseWifi,
+    "Historical Fiction": HeartCrack
   };
 
   // Minimal pastel colors for modern look
@@ -47,7 +49,9 @@ const RecentBooks = () => {
       Technology: "bg-green-100 text-green-800",
       Financial: "bg-amber-100 text-amber-800",
       Design: "bg-indigo-100 text-indigo-800",
+      Horror: "bg-cyan-100 text-cyan-800",
       "Lifestyle & Habits": "bg-teal-100 text-teal-800",
+      "Historical Fiction": "bg-rose-100 text-rose-800",
     };
     return styles[genre] || "bg-gray-100 text-gray-700";
   };
@@ -76,9 +80,7 @@ const RecentBooks = () => {
         <div className="p-4 space-y-3">
           {books.map((book) => {
             const Icon = categoryIcons[book.genre] || Book;
-            const coverImageUrl = book.coverImage
-              ? `${import.meta.env.VITE_API_BASE_URL}/${book.coverImage.replace(/^\/?/, "")}`
-              : null;
+            const coverImageUrl = book.coverImage || null;;
 
             return (
               <div

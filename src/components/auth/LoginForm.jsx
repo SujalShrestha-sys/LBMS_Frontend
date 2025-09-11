@@ -31,7 +31,7 @@ const LoginForm = () => {
       const res = await loginApi(formData);
       const { token, user } = res.data;
 
-      login(user, token);
+      await login(user, token);
 
       toast.success(`Welcome back, ${user.name}`);
 
